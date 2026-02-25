@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hjúkrunarheimili á Íslandi – Markaðsgreining</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f4f8; color: #1a2332; font-size: 14px; }
+
+  /* Header */
+  .header { background: linear-gradient(135deg, #0a1628 0%, #1a3a5c 60%, #1e5080 100%); color: white; padding: 28px 36px 22px; }
+  .header h1 { font-size: 1.55rem; font-weight: 700; letter-spacing: -0.01em; }
+  .header-sub { display: flex; gap: 16px; margin-top: 8px; flex-wrap: wrap; }
+  .badge { background: rgba(255,255,255,0.13); border: 1px solid rgba(255,255,255,0.22); padding: 3px 11px; border-radius: 20px; font-size: 0.73rem; color: rgba(255,255,255,0.85); }
+  .badge.highlight { background: rgba(52,199,120,0.25); border-color: rgba(52,199,120,0.5); color: #7fffc4; }
+
+  .container { max-width: 1340px; margin: 0 auto; padding: 24px 18px; }
+
+  /* Section labels */
+  .section-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #8a9bb0; margin-bottom: 10px; margin-top: 4px; }
+
+  /* KPI grid */
+  .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(175px, 1fr)); gap: 12px; margin-bottom: 20px; }
+  .kpi { background: white; border-radius: 10px; padding: 16px 18px; box-shadow: 0 1px 6px rgba(0,0,0,0.07); position: relative; overflow: hidden; }
+  .kpi::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background: var(--accent, #1a3a5c); }
+  .kpi.blue   { --accent: #1a6eb5; }
+  .kpi.green  { --accent: #27ae60; }
+  .kpi.orange { --accent: #e67e22; }
+  .kpi.red    { --accent: #c0392b; }
+  .kpi.purple { --accent: #7b2d8b; }
+  .kpi.teal   { --accent: #0e8a7a; }
+  .kpi label  { font-size: 0.68rem; color: #8a9bb0; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; display: block; margin-bottom: 6px; }
+  .kpi .val   { font-size: 1.85rem; font-weight: 700; line-height: 1; color: #0f1f35; }
+  .kpi .sub   { font-size: 0.72rem; color: #9aacbc; margin-top: 5px; line-height: 1.3; }
+  .kpi .trend { font-size: 0.75rem; font-weight: 600; }
+  .kpi .trend.up   { color: #c0392b; }
+  .kpi .trend.down { color: #27ae60; }
+
+  /* Controls */
+  .controls { background: white; border-radius: 10px; padding: 20px 24px; margin-bottom: 20px; box-shadow: 0 1px 6px rgba(0,0,0,0.07); }
+  .ctrl-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 0; }
+  .ctrl-col { padding: 4px 16px; border-right: 1px solid #f0f4f8; }
+  .ctrl-col:first-child { padding-left: 0; }
+  .ctrl-col:last-child  { border-right: none; }
+  .ctrl-col-title { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #c0392b; margin-bottom: 12px; }
+  .ctrl-col-title.blue   { color: #1a6eb5; }
+  .ctrl-col-title.green  { color: #27ae60; }
+  .ctrl-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .ctrl-row label { font-size: 0.8rem; font-weight: 500; color: #2c3e50; flex: 1; min-width: 160px; }
+  .ctrl-row input[type=range] { width: 120px; accent-color: #1a3a5c; flex-shrink: 0; }
+  .ctrl-val { font-size: 0.88rem; font-weight: 700; color: #1a3a5c; min-width: 70px; text-align: right; }
+
+  /* Charts */
+  .chart-full { background: white; border-radius: 10px; padding: 22px; box-shadow: 0 1px 6px rgba(0,0,0,0.07); margin-bottom: 18px; }
+  .chart-full h2 { font-size: 0.92rem; font-weight: 700; color: #0f1f35; margin-bottom: 3px; }
+  .chart-full .chart-note { font-size: 0.72rem; color: #9aacbc; margin-bottom: 14px; line-height: 1.5; }
+  .chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
+  .chart-box { background: white; border-radius: 10px; padding: 22px; box-shadow: 0 1px 6px rgba(0,0,0,0.07); }
+  .chart-box h2 { font-size: 0.92rem; font-weight: 700; color: #0f1f35; margin-bottom: 3px; }
+  .chart-box .chart-note { font-size: 0.72rem; color: #9aacbc; margin-bottom: 14px; line-height: 1.5; }
+
+  /* Insight box */
+  .insight-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; margin-bottom: 18px; }
+  .insight { background: white; border-radius: 10px; padding: 18px 20px; box-shadow: 0 1px 6px rgba(0,0,0,0.07); border-left: 4px solid var(--c, #1a3a5c); }
+  .insight.blue   { --c: #1a6eb5; }
+  .insight.orange { --c: #e67e22; }
+  .insight.green  { --c: #27ae60; }
+  .insight.red    { --c: #c0392b; }
+  .insight h3 { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--c); margin-bottom: 8px; }
+  .insight p { font-size: 0.82rem; color: #3a4f63; line-height: 1.55; }
+  .insight strong { color: #0f1f35; }
+
+  /* Table */
+  .table-box { background: white; border-radius: 10px; padding: 20px; box-shadow: 0 1px 6px rgba(0,0,0,0.07); margin-bottom: 18px; overflow-x: auto; }
+  .table-box h2 { font-size: 0.92rem; font-weight: 700; color: #0f1f35; margin-bottom: 14px; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+  thead th { background: #0f1f35; color: white; padding: 9px 12px; text-align: left; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  td { padding: 8px 12px; border-bottom: 1px solid #f0f4f8; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #f7fafd; }
+  .eftir áætlun { background: #fafbfc; color: #8a9bb0; font-style: italic; }
+  .neg { color: #c0392b; font-weight: 700; }
+  .pos { color: #27ae60; font-weight: 700; }
+  .yr-badge { display: inline-block; background: #eef2f7; border-radius: 4px; padding: 1px 7px; font-weight: 700; font-size: 0.78rem; }
+
+  /* Dvalartími box */
+  .flow-box { background: linear-gradient(135deg, #0f1f35, #1a3a5c); color: white; border-radius: 10px; padding: 22px 26px; margin-bottom: 18px; }
+  .flow-box h2 { font-size: 0.92rem; font-weight: 700; margin-bottom: 16px; opacity: 0.9; }
+  .flow-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; }
+  .flow-m { border-left: 2px solid rgba(255,255,255,0.2); padding-left: 14px; }
+  .flow-m label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.55; display: block; margin-bottom: 4px; }
+  .flow-m .fval { font-size: 1.5rem; font-weight: 700; line-height: 1; }
+  .flow-m .fsub { font-size: 0.7rem; opacity: 0.5; margin-top: 3px; }
+
+  @media (max-width: 800px) { .chart-grid { grid-template-columns: 1fr; } .ctrl-col { border-right: none; border-bottom: 1px solid #f0f4f8; padding: 12px 0; } }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Hjúkrunarheimili - Markaðsgreining ÍF (FEB 26)</h1>
+  <div class="header-sub">
+    <span class="badge">Mannfjöldagögn: Hagstofa Íslands MAN09010 (miðgildisspá)</span>
+    <span class="badge">Framkvæmdaáætlun: Félags- og húsnæðismálaráðuneytið, feb 2026</span>
+    <span class="badge highlight">Trúnaðarmál — til innri nota</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ── SECTION 1: MARKET SIZE ── -->
+  <div class="section-label">Lykiltölur</div>
+  <div class="kpi-grid">
+    <div class="kpi blue"><label>Núverandi framboð</label><div class="val">3,062</div><div class="sub">Rými í rekstri, nóv 2025</div></div>
+    <div class="kpi red"><label>Heildaþörf í dag</label><div class="val" id="kpi-demand-now">–</div><div class="sub">6%/15% líkan, 2026</div></div>
+    <div class="kpi orange"><label>Biðlisti</label><div class="val" id="kpi-reg-gap">–</div><div class="sub" id="kpi-reg-gap-sub">af ~– reiknaðs bils</div></div>
+    <div class="kpi green"><label>Rými sem þarf að byggja — strax</label><div class="val" id="kpi-beds-now">–</div><div class="sub">Til að uppfylla biðtímamarkmið</div></div>
+    <div class="kpi teal"><label>Innritanir á ári</label><div class="val" id="kpi-annual-admit">–</div><div class="sub">Núverandi rými × veltuhlutfall</div></div>
+  </div>
+
+  <!-- ── CONTROLS ── -->
+  <div class="controls">
+    <div class="section-label" style="margin-bottom:14px;">Forsendur líkansins — stilltu til að kanna mismunandi sviðsmyndir</div>
+    <div class="ctrl-grid">
+
+      <div class="ctrl-col">
+        <div class="ctrl-col-title red">Eftirspurnarlíkan</div>
+        <div class="ctrl-row">
+          <label>Hlutfall 67–79 ára á hjúkrunarheimili</label>
+          <input type="range" id="rate67" min="1" max="15" step="0.5" value="6">
+          <div class="ctrl-val" id="valRate67">6.0%</div>
+        </div>
+        <div class="ctrl-row">
+          <label>Hlutfall 80+ ára á hjúkrunarheimili</label>
+          <input type="range" id="rate80" min="5" max="30" step="0.5" value="15">
+          <div class="ctrl-val" id="valRate80">15.0%</div>
+        </div>
+      </div>
+
+      <div class="ctrl-col">
+        <div class="ctrl-col-title blue">Dvalartími</div>
+        <div class="ctrl-row">
+          <label>Meðaldvöl hvers íbúa</label>
+          <input type="range" id="stayMonths" min="12" max="36" step="1" value="20">
+          <div class="ctrl-val" id="valStayMonths">20 mán.</div>
+        </div>
+        <div class="ctrl-row">
+          <label>Markmið um biðtíma</label>
+          <input type="range" id="targetWait" min="30" max="180" step="15" value="90">
+          <div class="ctrl-val" id="valTargetWait">90 dagar</div>
+        </div>
+        <div class="ctrl-row">
+          <label>Núverandi meðalbiðtími</label>
+          <input type="range" id="currentWait" min="30" max="365" step="15" value="180">
+          <div class="ctrl-val" id="valCurrentWait">180 dagar</div>
+        </div>
+        <div class="ctrl-row">
+          <label>Markmið ríkis: % biðlista sem fær rými innan 90 daga</label>
+          <input type="range" id="pct90" min="0" max="100" step="5" value="75">
+          <div class="ctrl-val" id="valPct90">75%</div>
+        </div>
+      </div>
+
+      <div class="ctrl-col">
+        <div class="ctrl-col-title green">Biðlisti & Viðbótarrými efitr 2030</div>
+        <div class="ctrl-row">
+          <label>Biðlisti í dag (2026)</label>
+          <input type="range" id="waitInit" min="0" max="1000" step="50" value="700">
+          <div class="ctrl-val" id="valWaitInit">700</div>
+        </div>
+        <div class="ctrl-row">
+          <label>Ný rými/ár eftir 2030</label>
+          <input type="range" id="postBuild" min="0" max="200" step="10" value="100">
+          <div class="ctrl-val" id="valPostBuild">100/yr</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── FLOW MECHANICS ── -->
+  <div class="flow-box">
+    <h2>Forsendur líkans</h2>
+    <div class="flow-metrics">
+      <div class="flow-m"><label>Meðaldvöl</label><div class="fval" id="fm-stay">20 mán.</div><div class="fsub">Á hvern íbúa</div></div>
+      <div class="flow-m"><label>Árleg endurnýjun</label><div class="fval" id="fm-turnover">–</div><div class="fsub">Rými sem losna á ári</div></div>
+      <div class="flow-m"><label>Innritanir á ári today</label><div class="fval" id="fm-admissions">–</div><div class="fsub">Frá núverandi 3.062 rýmum</div></div>
+      <div class="flow-m"><label>Rými sem losna á tímabili</label><div class="fval" id="fm-freed">–</div><div class="fsub" id="fm-freed-sub">75% af biðlista</div></div>
+      <div class="flow-m"><label>Rými til að hreinsa biðlista</label><div class="fval" id="fm-backlog">–</div><div class="fsub">Aukið rými til að ná markmiðum um biðtíma</div></div>
+      <div class="flow-m"><label>Nýtingarhlutfall</label><div class="fval">~100%</div><div class="fsub">Framboðsskortur</div></div>
+    </div>
+  </div>
+
+  <!-- ── STRATEGIC INSIGHTS ── -->
+  <div class="section-label">Helstu niðurstöður</div>
+  <div class="insight-grid">
+    <div class="insight blue">
+      <h3>Biðlistar</h3>
+      <p id="insight-immediate">Loading...</p>
+    </div>
+    <div class="insight orange">
+      <h3>Fjölgun aldraðra</h3>
+      <p id="insight-growth">Loading...</p>
+    </div>
+    <div class="insight green">
+      <h3>Nýbyggingar</h3>
+      <p id="insight-build">Loading...</p>
+    </div>
+    <div class="insight red">
+      <h3>Forsendur framkvæmdáætlunar</h3>
+      <p id="insight-risk">Loading...</p>
+    </div>
+  </div>
+
+  <!-- ── MAIN CHART ── -->
+  <div class="chart-full">
+    <h2>Framboð vs. Þörf — 2025 til 2040</h2>
+    <div class="chart-note">Blár = framkvæmdaáætlun ríkis (til 2030), síðan spá um ný rými eftir 2030. Rauður = Vöntun. Appelsínugult strikað = markmið ríkisins (til 2030). Skyggða svæðið sýnir fjölda í þörf fyrir rými</div>
+    <canvas id="mainChart" height="75"></canvas>
+  </div>
+
+  <!-- ── CHARTS ROW ── -->
+  <div class="chart-grid">
+    <div class="chart-box">
+      <h2>Þróun biðlista 2026–2040</h2>
+      <div class="chart-note">Byrjar á núverandi biðlista. Þróast eftir vexti þarfar að frádregnum nýjum rýmum. Grænt = minnkandi; rautt = vaxandi biðlisti.</div>
+      <canvas id="waitChart" height="210"></canvas>
+    </div>
+    <div class="chart-box">
+      <h2>Þörfasamsetning eftir aldurshóp</h2>
+      <div class="chart-note">Blátt = framlag 67–79 ára hóps. Rautt = 80+ hópur. 80+ hluturinn vex hratt — knúinn af lýðfræðilegri þróun Íslands.</div>
+      <canvas id="stackChart" height="210"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-grid">
+    <div class="chart-box">
+      <h2>Árleg markaðsflæði (innlagnir/ár)</h2>
+      <div class="chart-note">Ný rými auka árslegar innlagnir. Þetta er rekstrarleg markaðsstærð — mikilvæg fyrir rekstraraðila, mannafla og tekjulíkön.</div>
+      <canvas id="flowChart" height="210"></canvas>
+    </div>
+    <div class="chart-box">
+      <h2>Þróun eldri íbúa (Hagstofa MAN09010)</h2>
+      <div class="chart-note">Lýðfræðilega vélin á bak við alla eftirspurn. 80+ næstum tvöfaldast frá ~14.300 (2025) í ~28.000 (2040).</div>
+      <canvas id="popChart" height="210"></canvas>
+    </div>
+  </div>
+
+  <!-- ── DATA TABLE ── -->
+  <div class="table-box">
+    <h2>Árleg niðurstaða líkansins — 2025 til 2040</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Ár</th>
+          <th>Framboð (rými)</th>
+          <th>Þörf (líkan)</th>
+          <th>Bil</th>
+          <th>Þörf ríkis</th>
+          <th>Biðlisti</th>
+          <th>Innritanir á ári</th>
+          <th>Ný rými</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+
+  <!-- ── PROJECTS TABLE ── -->
+  <div class="table-box">
+    <h2>Framkvæmdaáætlun ríkisins 2026–2030</h2>
+    <table>
+      <thead>
+        <tr><th>Ár</th><th>Verkefni</th><th>Landshluti</th><th>Ný rými</th></tr>
+      </thead>
+      <tbody id="projectBody"></tbody>
+    </table>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+// ── STATIC DATA ───────────────────────────────────────────────────────────────
+const YEARS = [2025,2026,2027,2028,2029,2030,2031,2032,2033,2034,2035,2036,2037,2038,2039,2040];
+
+const POP67_79 = {2025:38800,2026:40749,2027:41919,2028:42881,2029:43533,2030:44331,2031:45084,2032:45821,2033:46485,2034:47077,2035:47460,2036:47613,2037:47748,2038:47713,2039:48105,2040:48777};
+const POP80P   = {2025:14300,2026:15153,2027:15853,2028:16680,2029:17586,2030:18490,2031:19458,2032:20383,2033:21282,2034:22300,2035:23270,2036:24291,2037:25347,2038:26446,2039:27304,2040:28247};
+
+const SUPPLY_PLAN = {2025:3062,2026:3216,2027:3498,2028:3949,2029:4277,2030:4417};
+const GOV_DEMAND  = {2026:3819,2027:3990,2028:4175,2029:4361,2030:4508};
+
+const PROJECTS = [
+  {yr:2026,name:"Urðarhvarf",       rooms:100, region:"Höfuðborgarsvæðið"},
+  {yr:2026,name:"Nesvellir",        rooms:50,  region:"Suðurnesja"},
+  {yr:2026,name:"Ísafold",          rooms:4,   region:"Höfuðborgarsvæðið"},
+  {yr:2027,name:"Sólitún",          rooms:67,  region:"Höfuðborgarsvæðið"},
+  {yr:2027,name:"Keilisbraut",      rooms:90,  region:"Suðurnesja"},
+  {yr:2027,name:"Húsavík",          rooms:6,   region:"Norðurland"},
+  {yr:2027,name:"Nauthólsvegur",    rooms:87,  region:"Höfuðborgarsvæðið"},
+  {yr:2027,name:"Hveragerði",       rooms:26,  region:"Suðurland"},
+  {yr:2027,name:"Höfn",             rooms:6,   region:"Austurland"},
+  {yr:2028,name:"Þursaholt",        rooms:140, region:"Norðurland"},
+  {yr:2028,name:"Mosfellsbær",      rooms:66,  region:"Höfuðborgarsvæðið"},
+  {yr:2028,name:"Akranes",          rooms:60,  region:"Vesturland"},
+  {yr:2028,name:"Hraunvangur",      rooms:125, region:"Höfuðborgarsvæðið"},
+  {yr:2028,name:"Eir Grafarvogur",  rooms:60,  region:"Höfuðborgarsvæðið"},
+  {yr:2029,name:"Patreksfjörður",   rooms:0,   region:"Vestfjarðar"},
+  {yr:2029,name:"Eyri",             rooms:20,  region:"Austurland"},
+  {yr:2029,name:"Vík",              rooms:0,   region:"Suðurland"},
+  {yr:2029,name:"Vigdísarholt",     rooms:108, region:"Höfuðborgarsvæðið"},
+  {yr:2029,name:"Reykjavík",        rooms:100, region:"Höfuðborgarsvæðið"},
+  {yr:2029,name:"Vetrarmýri",       rooms:100, region:"Höfuðborgarsvæðið"},
+  {yr:2030,name:"Austurland",       rooms:20,  region:"Austurland"},
+  {yr:2030,name:"Suðurland",        rooms:40,  region:"Suðurland"},
+  {yr:2030,name:"Óákveðið",         rooms:80,  region:"Höfuðborgarsvæðið"},
+];
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let rate67 = 0.06, rate80 = 0.15;
+let stayMonths = 20, targetWait = 90, currentWait = 180, pct90 = 75;
+let waitInit = 700, postBuild = 100;
+
+// ── COMPUTED ──────────────────────────────────────────────────────────────────
+const fmt = n => Math.round(n).toLocaleString('en-IS');
+const fmtSign = n => (n>=0?'+':'')+fmt(n);
+
+function getDemand(y) {
+  return Math.round((POP67_79[y]||0)*rate67 + (POP80P[y]||0)*rate80);
+}
+function getSupply(y) {
+  if (y <= 2030) return SUPPLY_PLAN[y] ?? SUPPLY_PLAN[2030];
+  return SUPPLY_PLAN[2030] + (y-2030)*postBuild;
+}
+function turnoverRate() { return 12 / stayMonths; }
+function annualAdmissions(beds) { return Math.round(beds * turnoverRate()); }
+// How many of waiting list get served within 90 days, based on % target
+function bedsFreedInWindow(beds) { return Math.round(waitInit * pct90 / 100); }
+
+function getWaitingList() {
+  const wl = {2025: null, 2026: waitInit};
+  for (let i = 2; i < YEARS.length; i++) {
+    const y = YEARS[i], prev = YEARS[i-1];
+    const demandGrowth = getDemand(y) - getDemand(prev);
+    const newRooms     = getSupply(y) - getSupply(prev);
+    wl[y] = Math.max(0, (wl[prev]||0) + demandGrowth - newRooms);
+  }
+  return wl;
+}
+
+// ── UPDATE KPIs & FLOW BOX ────────────────────────────────────────────────────
+function updateKPIs() {
+  const demand2026  = getDemand(2026);
+  const supply2026  = 3062;
+  const regGap      = waitInit;                     // registered = waiting list
+  const freed       = bedsFreedInWindow(supply2026);
+  const bedsNeeded  = Math.max(0, waitInit - freed); // extra beds to meet target wait
+  const annAdmit    = annualAdmissions(supply2026);
+  const wl          = getWaitingList();
+  const wl2040      = wl[2040] || 0;
+
+  document.getElementById('kpi-demand-now').textContent   = fmt(demand2026);
+  document.getElementById('kpi-reg-gap').textContent      = fmt(regGap);
+  const modelGap2026 = getDemand(2026) - 3062;
+  document.getElementById('kpi-reg-gap-sub').textContent = 'af ' + fmt(modelGap2026) + ' reiknaðs bils';
+  document.getElementById('kpi-beds-now').textContent     = fmt(bedsNeeded);
+  document.getElementById('kpi-annual-admit').textContent = fmt(annAdmit);
+
+  // Flow box
+  document.getElementById('fm-stay').textContent       = stayMonths+' mán.';
+  document.getElementById('fm-turnover').textContent   = turnoverRate().toFixed(2)+'×';
+  document.getElementById('fm-admissions').textContent = fmt(annAdmit);
+  document.getElementById('fm-freed').textContent      = fmt(freed);
+  document.getElementById('fm-backlog').textContent    = fmt(bedsNeeded);
+  document.getElementById('fm-freed-sub').textContent  = pct90+'% af biðlista';
+
+  // Insights
+  const gap2030 = getSupply(2030) - getDemand(2030);
+  const gap2040 = getSupply(2040) - getDemand(2040);
+
+  document.getElementById('insight-immediate').innerHTML =
+    `Það eru <strong>${fmt(waitInit)} manns</strong> á biðlista með staðfest læknisvottorð — þetta er <em>skráð</em> eftirspurn. Heildarbilið samkvæmt 6%/15% líkaninu er <strong>${fmt(modelGap2026)} rými</strong> — biðlistinn (${fmt(waitInit)}) er skráður hluti þess. Samkvæmt markmiði ríkisins um að <strong>${pct90}% biðlista fái rými innan 90 daga</strong> þarf að losa <strong>${fmt(freed)} rými</strong> á þessu tímabili — sem skilur eftir <strong>skipulegan skort upp á ${fmt(bedsNeeded)} rými í dag</strong>, óháð framtíðarþróun mannfjölda.`;
+
+  const bedsNeeded2030 = Math.abs(Math.min(0, gap2030));
+  document.getElementById('insight-growth').innerHTML =
+    `80+ hópurinn næstum tvöfaldast frá ~14.300 (2025) í ~28.200 (2040) samkvæmt Hagstofu MAN09010. Jafnvel þótt ríkisáætlunin skili 4.417 rýmum fyrir 2030 spáir líkanið okkar <strong>bili upp á ${fmt(Math.abs(gap2030))} rými</strong> árið 2030 — vaxandi í <strong>${fmt(Math.abs(gap2040))} rými</strong> árið 2040 við ${postBuild} rými/ár eftir 2030.`;
+
+  document.getElementById('insight-build').innerHTML =
+    `Ríkið áætlar <strong>1.355 ný rými</strong> fyrir lok 2030 í yfir 20 verkefnum. Til að loka spáðu 2030-bilinu að fullu þyrfti um <strong>${fmt(Math.abs(gap2030))} viðbótarrými</strong> umfram núverandi áætlun — skýrt tækifæri fyrir einkaþróun. Árslegar innlagnir við marknýtingu ná <strong>${fmt(annualAdmissions(getSupply(2030)))} á ári</strong> árið 2030.`;
+
+  document.getElementById('insight-risk').innerHTML =
+    `Þörfamat ríkisins (75% þröskuldur) er verulega lægra en 6%/15% líkanið okkar, sem gefur til kynna að <strong>áætlunin gæti dugað samkvæmt eigin mælikvörðum þeirra</strong>. Lykiláhætta fyrir þróunaraðila er hvort opinber fjármögnun, skipulagsleyfi og rekstrarstyrkur verði tiltækur fyrir einkabyggt rými. Hins vegar þýðir <strong>skipulegur skortur og 100% nýting</strong> að tekjuáhætta er lítil þegar búið er að byggja.`;
+}
+
+// ── CHARTS ────────────────────────────────────────────────────────────────────
+let mainChart, waitChart, stackChart, flowChart, popChart;
+
+function buildMainChart() {
+  const demand  = YEARS.map(y => getDemand(y));
+  const supply  = YEARS.map(y => getSupply(y));
+  const govD    = YEARS.map(y => GOV_DEMAND[y]||null);
+  const gap     = YEARS.map((y,i) => Math.max(0, demand[i] - supply[i]));
+  const ctx = document.getElementById('mainChart').getContext('2d');
+  if (mainChart) mainChart.destroy();
+  mainChart = new Chart(ctx, {
+    data:{
+      labels: YEARS,
+      datasets:[
+        {type:'bar',   label:'Óuppfyllt þörf (bil)', data:gap,   backgroundColor:'rgba(192,57,43,0.15)', borderColor:'rgba(192,57,43,0.3)', borderWidth:1, yAxisID:'y'},
+        {type:'line',  label:'Framboð (rými)',       data:supply, borderColor:'#1a6eb5', backgroundColor:'rgba(26,110,181,0.06)', borderWidth:2.5, pointRadius:4, fill:false, tension:0.15},
+        {type:'line',  label:'Þörf (6%/15%)',     data:demand, borderColor:'#c0392b', borderWidth:2.5, pointRadius:4, fill:false, tension:0.15},
+        {type:'line',  label:'Þörfamat ríkis (75%)', data:govD, borderColor:'#e67e22', borderDash:[6,4], borderWidth:2, pointRadius:3, fill:false, tension:0.15},
+      ]
+    },
+    options:{
+      responsive:true, interaction:{mode:'index',intersect:false},
+      plugins:{legend:{position:'bottom',labels:{boxWidth:13,font:{size:11}}},
+        tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${c.raw!=null?fmt(c.raw):'—'}`}}},
+      scales:{
+        y:{min:0,beginAtZero:true,title:{display:true,text:'Rými'},ticks:{callback:v=>fmt(v)},grid:{color:'#f5f7fa'}},
+        x:{grid:{color:'#f5f7fa'}}
+      }
+    }
+  });
+}
+
+function buildWaitChart() {
+  const wl = getWaitingList();
+  const data   = YEARS.map(y => wl[y]);
+  const colors = data.map(v => v==null?'transparent':v>500?'rgba(192,57,43,0.7)':v>200?'rgba(230,126,34,0.7)':'rgba(39,174,96,0.7)');
+  const ctx = document.getElementById('waitChart').getContext('2d');
+  if (waitChart) waitChart.destroy();
+  waitChart = new Chart(ctx, {
+    type:'bar',
+    data:{labels:YEARS, datasets:[{label:'Biðlisti',data,backgroundColor:colors,borderWidth:0}]},
+    options:{
+      responsive:true,
+      plugins:{legend:{display:false}, tooltip:{callbacks:{label:c=>`Biðlisti: ${c.raw!=null?fmt(c.raw):'—'} manns`}}},
+      scales:{
+        y:{beginAtZero:true,title:{display:true,text:'Manns á biðlista'},ticks:{callback:v=>fmt(v)},grid:{color:'#f5f7fa'}},
+        x:{grid:{color:'#f5f7fa'}}
+      }
+    }
+  });
+}
+
+function buildStackChart() {
+  const ctx = document.getElementById('stackChart').getContext('2d');
+  if (stackChart) stackChart.destroy();
+  stackChart = new Chart(ctx, {
+    type:'bar',
+    data:{
+      labels:YEARS,
+      datasets:[
+        {label:'80+ yrs ('+Math.round(rate80*100)+'%)', data:YEARS.map(y=>Math.round(POP80P[y]*rate80)),   backgroundColor:'rgba(192,57,43,0.7)', stack:'d'},
+        {label:'67–79 yrs ('+Math.round(rate67*100)+'%)', data:YEARS.map(y=>Math.round(POP67_79[y]*rate67)), backgroundColor:'rgba(26,110,181,0.65)', stack:'d'},
+      ]
+    },
+    options:{
+      responsive:true,
+      plugins:{legend:{position:'bottom',labels:{boxWidth:12,font:{size:11}}}},
+      scales:{
+        x:{stacked:true,ticks:{font:{size:10}}},
+        y:{stacked:true,beginAtZero:true,title:{display:true,text:'Þörf (rými)'},ticks:{callback:v=>fmt(v)},grid:{color:'#f5f7fa'}}
+      }
+    }
+  });
+}
+
+function buildFlowChart() {
+  const ctx = document.getElementById('flowChart').getContext('2d');
+  if (flowChart) flowChart.destroy();
+  flowChart = new Chart(ctx, {
+    type:'line',
+    data:{
+      labels:YEARS,
+      datasets:[{
+        label:'Innritanir á ári (beds × turnover rate)',
+        data: YEARS.map(y => annualAdmissions(getSupply(y))),
+        borderColor:'#0e8a7a', backgroundColor:'rgba(14,138,122,0.1)', fill:true, borderWidth:2.5, tension:0.3, pointRadius:4
+      }]
+    },
+    options:{
+      responsive:true,
+      plugins:{legend:{position:'bottom',labels:{boxWidth:12,font:{size:11}}}},
+      scales:{
+        y:{beginAtZero:false,title:{display:true,text:'Innritanir á ári'},ticks:{callback:v=>fmt(v)},grid:{color:'#f5f7fa'}},
+        x:{grid:{color:'#f5f7fa'}}
+      }
+    }
+  });
+}
+
+function buildPopChart() {
+  const ctx = document.getElementById('popChart').getContext('2d');
+  if (popChart) popChart.destroy();
+  popChart = new Chart(ctx, {
+    type:'line',
+    data:{
+      labels:YEARS,
+      datasets:[
+        {label:'80+ ára', data:YEARS.map(y=>POP80P[y]),   borderColor:'#c0392b', backgroundColor:'rgba(192,57,43,0.08)', fill:true, borderWidth:2.5, tension:0.3},
+        {label:'67–79 ára', data:YEARS.map(y=>POP67_79[y]), borderColor:'#1a6eb5', backgroundColor:'rgba(26,110,181,0.07)', fill:true, borderWidth:2.5, tension:0.3},
+      ]
+    },
+    options:{
+      responsive:true,
+      plugins:{legend:{position:'bottom',labels:{boxWidth:12,font:{size:11}}}},
+      scales:{
+        y:{title:{display:true,text:'Mannfjöldi'},ticks:{callback:v=>fmt(v)},grid:{color:'#f5f7fa'}},
+        x:{grid:{color:'#f5f7fa'}}
+      }
+    }
+  });
+}
+
+// ── TABLE ────────────────────────────────────────────────────────────────────
+function buildTable() {
+  const wl = getWaitingList();
+  let prev_supply = null;
+  document.getElementById('tableBody').innerHTML = YEARS.map(y => {
+    const s    = getSupply(y);
+    const d    = getDemand(y);
+    const gap  = s - d;
+    const wlv  = wl[y];
+    const added = prev_supply !== null ? s - prev_supply : 0;
+    prev_supply = s;
+    const isPost = y > 2030;
+    const wlClass = wlv == null ? '' : wlv > 500 ? 'neg' : wlv > 200 ? '' : 'pos';
+    const gd   = GOV_DEMAND[y] ? fmt(GOV_DEMAND[y]) : '—';
+    return `<tr class="${isPost?'eftir áætlun':''}">
+      <td><span class="yr-badge">${y}</span>${isPost?' <span style="font-size:0.68rem;color:#9aacbc">eftir áætlun</span>':''}</td>
+      <td>${fmt(s)}</td>
+      <td>${fmt(d)}</td>
+      <td class="${gap>=0?'pos':'neg'}">${fmtSign(gap)}</td>
+      <td>${gd}</td>
+      <td class="${wlClass}">${wlv!=null?fmt(wlv):'—'}</td>
+      <td>${fmt(annualAdmissions(s))}</td>
+      <td style="color:#1a6eb5;font-weight:${added>0?'600':'400'}">${added>0?'+'+fmt(added):'—'}</td>
+    </tr>`;
+  }).join('');
+}
+
+function buildProjectTable() {
+  document.getElementById('projectBody').innerHTML = PROJECTS.map(p=>`<tr>
+    <td><span class="yr-badge">${p.yr}</span></td>
+    <td>${p.name}</td>
+    <td>${p.region}</td>
+    <td style="font-weight:600;color:${p.rooms>0?'#1a6eb5':'#9aacbc'}">${p.rooms>0?'+'+p.rooms:'TBD'}</td>
+  </tr>`).join('');
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────────────
+function renderAll() {
+  updateKPIs();
+  buildMainChart();
+  buildWaitChart();
+  buildStackChart();
+  buildFlowChart();
+  buildTable();
+}
+
+// ── CONTROLS ─────────────────────────────────────────────────────────────────
+const sliders = [
+  ['rate67',      v => { rate67      = v/100;      return v+'%'; }],
+  ['rate80',      v => { rate80      = v/100;      return v+'%'; }],
+  ['stayMonths',  v => { stayMonths  = parseInt(v);return v+' mán.'; }],
+  ['targetWait',  v => { targetWait  = parseInt(v); return v+' dagar'; }],
+  ['currentWait', v => { currentWait = parseInt(v); return v+' dagar'; }],
+  ['pct90',       v => { pct90       = parseInt(v); return v+'%'; }],
+  ['waitInit',    v => { waitInit    = parseInt(v);return fmt(v); }],
+  ['postBuild',   v => { postBuild   = parseInt(v);return v+'/ár'; }],
+];
+sliders.forEach(([id, fn]) => {
+  document.getElementById(id).addEventListener('input', function() {
+    const display = fn(this.value);
+    document.getElementById('val'+id.charAt(0).toUpperCase()+id.slice(1)).textContent = display;
+    renderAll();
+  });
+});
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+renderAll();
+buildPopChart();
+buildProjectTable();
+</script>
+</body>
+</html>
