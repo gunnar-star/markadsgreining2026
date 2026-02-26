@@ -16,7 +16,19 @@
   .badge { background: rgba(255,255,255,0.13); border: 1px solid rgba(255,255,255,0.22); padding: 3px 11px; border-radius: 20px; font-size: 0.73rem; color: rgba(255,255,255,0.85); }
   .badge.highlight { background: rgba(52,199,120,0.25); border-color: rgba(52,199,120,0.5); color: #7fffc4; }
 
-  .container { max-width: 1340px; margin: 0 auto; padding: 24px 18px; }
+  .container { max-width: 1600px; margin: 0 auto; padding: 24px 18px; }
+  .two-col { display: grid; grid-template-columns: 1fr 300px; gap: 20px; align-items: start; }
+  .main-col { min-width: 0; }
+  .side-col { position: sticky; top: 20px; max-height: calc(100vh - 40px); overflow-y: auto; scrollbar-width: thin; scrollbar-color: #c8d3de transparent; }
+  .side-col .ctrl-grid { grid-template-columns: 1fr !important; }
+  .side-col .ctrl-col { border-right: none !important; border-bottom: 1px solid #f0f4f8; padding: 10px 0; }
+  .side-col .ctrl-col:last-child { border-bottom: none; }
+  .side-col .ctrl-row { flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
+  .side-col .ctrl-row label { font-size: 0.75rem; width: 100%; }
+  .side-col .ctrl-row input[type=range] { flex: 1; min-width: 80px; }
+  .side-col .ctrl-val { min-width: 52px; }
+  .side-col .flow-metrics { grid-template-columns: 1fr 1fr !important; gap: 10px; }
+  @media (max-width: 1050px) { .two-col { grid-template-columns: 1fr; } .side-col { position: static; max-height: none; } }
 
   /* Section labels */
   .section-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #8a9bb0; margin-bottom: 10px; margin-top: 4px; }
@@ -94,7 +106,7 @@
   .flow-m .fval { font-size: 1.5rem; font-weight: 700; line-height: 1; }
   .flow-m .fsub { font-size: 0.7rem; opacity: 0.5; margin-top: 3px; }
 
-  @media (max-width: 800px) { .chart-grid { grid-template-columns: 1fr; } .ctrl-col { border-right: none; border-bottom: 1px solid #f0f4f8; padding: 12px 0; } }
+  @media (max-width: 800px) { .chart-grid { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
@@ -109,6 +121,10 @@
 </div>
 
 <div class="container">
+<div class="two-col">
+
+<!-- ══ MAIN (LEFT) COLUMN ══ -->
+<div class="main-col">
 
   <!-- ── SECTION 1: MARKET SIZE ── -->
   <div class="section-label">Lykiltölur</div>
@@ -118,79 +134,6 @@
     <div class="kpi orange"><label>Biðlisti</label><div class="val" id="kpi-reg-gap">–</div><div class="sub" id="kpi-reg-gap-sub">af ~– reiknaðs bils</div></div>
     <div class="kpi green"><label>Rými sem þarf að byggja — strax</label><div class="val" id="kpi-beds-now">–</div><div class="sub">Til að uppfylla biðtímamarkmið</div></div>
     <div class="kpi teal"><label>Innritanir á ári</label><div class="val" id="kpi-annual-admit">–</div><div class="sub">Núverandi rými × veltuhlutfall</div></div>
-  </div>
-
-  <!-- ── CONTROLS ── -->
-  <div class="controls">
-    <div class="section-label" style="margin-bottom:14px;">Forsendur líkansins — stilltu til að kanna mismunandi sviðsmyndir</div>
-    <div class="ctrl-grid">
-
-      <div class="ctrl-col">
-        <div class="ctrl-col-title red">Eftirspurnarlíkan</div>
-        <div class="ctrl-row">
-          <label>Hlutfall 67–79 ára á hjúkrunarheimili</label>
-          <input type="range" id="rate67" min="1" max="15" step="0.5" value="6">
-          <div class="ctrl-val" id="valRate67">6.0%</div>
-        </div>
-        <div class="ctrl-row">
-          <label>Hlutfall 80+ ára á hjúkrunarheimili</label>
-          <input type="range" id="rate80" min="5" max="30" step="0.5" value="15">
-          <div class="ctrl-val" id="valRate80">15.0%</div>
-        </div>
-      </div>
-
-      <div class="ctrl-col">
-        <div class="ctrl-col-title blue">Dvalartími</div>
-        <div class="ctrl-row">
-          <label>Meðaldvöl hvers íbúa</label>
-          <input type="range" id="stayMonths" min="12" max="36" step="1" value="20">
-          <div class="ctrl-val" id="valStayMonths">20 mán.</div>
-        </div>
-        <div class="ctrl-row">
-          <label>Markmið um biðtíma</label>
-          <input type="range" id="targetWait" min="30" max="180" step="15" value="90">
-          <div class="ctrl-val" id="valTargetWait">90 dagar</div>
-        </div>
-        <div class="ctrl-row">
-          <label>Núverandi meðalbiðtími</label>
-          <input type="range" id="currentWait" min="30" max="365" step="15" value="180">
-          <div class="ctrl-val" id="valCurrentWait">180 dagar</div>
-        </div>
-        <div class="ctrl-row">
-          <label>Markmið ríkis: % biðlista sem fær rými innan 90 daga</label>
-          <input type="range" id="pct90" min="0" max="100" step="5" value="75">
-          <div class="ctrl-val" id="valPct90">75%</div>
-        </div>
-      </div>
-
-      <div class="ctrl-col">
-        <div class="ctrl-col-title green">Biðlisti & Viðbótarrými efitr 2030</div>
-        <div class="ctrl-row">
-          <label>Biðlisti í dag (2026)</label>
-          <input type="range" id="waitInit" min="0" max="1000" step="50" value="700">
-          <div class="ctrl-val" id="valWaitInit">700</div>
-        </div>
-        <div class="ctrl-row">
-          <label>Ný rými/ár eftir 2030</label>
-          <input type="range" id="postBuild" min="0" max="200" step="10" value="100">
-          <div class="ctrl-val" id="valPostBuild">100/yr</div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- ── FLOW MECHANICS ── -->
-  <div class="flow-box">
-    <h2>Forsendur líkans</h2>
-    <div class="flow-metrics">
-      <div class="flow-m"><label>Meðaldvöl</label><div class="fval" id="fm-stay">20 mán.</div><div class="fsub">Á hvern íbúa</div></div>
-      <div class="flow-m"><label>Árleg endurnýjun</label><div class="fval" id="fm-turnover">–</div><div class="fsub">Rými sem losna á ári</div></div>
-      <div class="flow-m"><label>Innritanir á ári today</label><div class="fval" id="fm-admissions">–</div><div class="fsub">Frá núverandi 3.062 rýmum</div></div>
-      <div class="flow-m"><label>Rými sem losna á tímabili</label><div class="fval" id="fm-freed">–</div><div class="fsub" id="fm-freed-sub">75% af biðlista</div></div>
-      <div class="flow-m"><label>Rými til að hreinsa biðlista</label><div class="fval" id="fm-backlog">–</div><div class="fsub">Aukið rými til að ná markmiðum um biðtíma</div></div>
-      <div class="flow-m"><label>Nýtingarhlutfall</label><div class="fval">~100%</div><div class="fsub">Framboðsskortur</div></div>
-    </div>
   </div>
 
   <!-- ── STRATEGIC INSIGHTS ── -->
@@ -279,6 +222,88 @@
     </table>
   </div>
 
+
+</div><!-- /main-col -->
+
+<!-- ══ SIDEBAR (RIGHT) COLUMN ══ -->
+<div class="side-col">
+  <!-- ── CONTROLS ── -->
+  <div class="controls">
+    <div class="section-label" style="margin-bottom:14px;">Forsendur líkansins — stilltu til að kanna mismunandi sviðsmyndir</div>
+    <div class="ctrl-grid">
+
+      <div class="ctrl-col">
+        <div class="ctrl-col-title red">Eftirspurnarlíkan</div>
+        <div class="ctrl-row">
+          <label>Hlutfall 67–79 ára á hjúkrunarheimili</label>
+          <input type="range" id="rate67" min="1" max="15" step="0.5" value="6">
+          <div class="ctrl-val" id="valRate67">6.0%</div>
+        </div>
+        <div class="ctrl-row">
+          <label>Hlutfall 80+ ára á hjúkrunarheimili</label>
+          <input type="range" id="rate80" min="5" max="30" step="0.5" value="15">
+          <div class="ctrl-val" id="valRate80">15.0%</div>
+        </div>
+      </div>
+
+      <div class="ctrl-col">
+        <div class="ctrl-col-title blue">Dvalartími</div>
+        <div class="ctrl-row">
+          <label>Meðaldvöl hvers íbúa</label>
+          <input type="range" id="stayMonths" min="12" max="36" step="1" value="20">
+          <div class="ctrl-val" id="valStayMonths">20 mán.</div>
+        </div>
+        <div class="ctrl-row">
+          <label>Markmið um biðtíma</label>
+          <input type="range" id="targetWait" min="30" max="180" step="15" value="90">
+          <div class="ctrl-val" id="valTargetWait">90 dagar</div>
+        </div>
+        <div class="ctrl-row">
+          <label>Núverandi meðalbiðtími</label>
+          <input type="range" id="currentWait" min="30" max="365" step="15" value="180">
+          <div class="ctrl-val" id="valCurrentWait">180 dagar</div>
+        </div>
+        <div class="ctrl-row">
+          <label>Markmið ríkis: % biðlista sem fær rými innan 90 daga</label>
+          <input type="range" id="pct90" min="0" max="100" step="5" value="75">
+          <div class="ctrl-val" id="valPct90">75%</div>
+        </div>
+      </div>
+
+      <div class="ctrl-col">
+        <div class="ctrl-col-title green">Biðlisti & Viðbótarrými efitr 2030</div>
+        <div class="ctrl-row">
+          <label>Biðlisti í dag (2026)</label>
+          <input type="range" id="waitInit" min="0" max="1000" step="50" value="700">
+          <div class="ctrl-val" id="valWaitInit">700</div>
+        </div>
+        <div class="ctrl-row">
+          <label>Ný rými/ár eftir 2030</label>
+          <input type="range" id="postBuild" min="0" max="200" step="10" value="100">
+          <div class="ctrl-val" id="valPostBuild">100/yr</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── FLOW MECHANICS ── -->
+  <div class="flow-box">
+    <h2>Forsendur líkans</h2>
+    <div class="flow-metrics">
+      <div class="flow-m"><label>Meðaldvöl</label><div class="fval" id="fm-stay">20 mán.</div><div class="fsub">Á hvern íbúa</div></div>
+      <div class="flow-m"><label>Árleg endurnýjun</label><div class="fval" id="fm-turnover">–</div><div class="fsub">Rými sem losna á ári</div></div>
+      <div class="flow-m"><label>Innritanir á ári today</label><div class="fval" id="fm-admissions">–</div><div class="fsub">Frá núverandi 3.062 rýmum</div></div>
+      <div class="flow-m"><label>Rými sem losna á tímabili</label><div class="fval" id="fm-freed">–</div><div class="fsub" id="fm-freed-sub">75% af biðlista</div></div>
+      <div class="flow-m"><label>Rými til að hreinsa biðlista</label><div class="fval" id="fm-backlog">–</div><div class="fsub">Aukið rými til að ná markmiðum um biðtíma</div></div>
+      <div class="flow-m"><label>Nýtingarhlutfall</label><div class="fval">~100%</div><div class="fsub">Framboðsskortur</div></div>
+    </div>
+  </div>
+
+
+</div><!-- /side-col -->
+
+</div><!-- /two-col -->
 </div><!-- /container -->
 
 <script>
