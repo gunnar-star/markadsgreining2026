@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="is">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -92,7 +92,7 @@
   td { padding: 8px 12px; border-bottom: 1px solid #f0f4f8; }
   tr:last-child td { border-bottom: none; }
   tr:hover td { background: #f7fafd; }
-  .eftir áætlun { background: #fafbfc; color: #8a9bb0; font-style: italic; }
+  .eftir-aetlun { background: #fafbfc; color: #8a9bb0; font-style: italic; }
   .neg { color: #c0392b; font-weight: 700; }
   .pos { color: #27ae60; font-weight: 700; }
   .yr-badge { display: inline-block; background: #eef2f7; border-radius: 4px; padding: 1px 7px; font-weight: 700; font-size: 0.78rem; }
@@ -129,11 +129,12 @@
   <!-- ── SECTION 1: MARKET SIZE ── -->
   <div class="section-label">Lykiltölur</div>
   <div class="kpi-grid">
-    <div class="kpi blue"><label>Núverandi framboð</label><div class="val">3,062</div><div class="sub">Rými í rekstri, nóv 2025</div></div>
-    <div class="kpi red"><label>Heildaþörf í dag</label><div class="val" id="kpi-demand-now">–</div><div class="sub">6%/15% líkan, 2026</div></div>
-    <div class="kpi orange"><label>Biðlisti</label><div class="val" id="kpi-reg-gap">–</div><div class="sub" id="kpi-reg-gap-sub">af ~– reiknaðs bils</div></div>
-    <div class="kpi green"><label>Rými sem þarf að byggja — strax</label><div class="val" id="kpi-beds-now">–</div><div class="sub">Til að uppfylla biðtímamarkmið</div></div>
-    <div class="kpi teal"><label>Innritanir á ári</label><div class="val" id="kpi-annual-admit">–</div><div class="sub">Núverandi rými × veltuhlutfall</div></div>
+    <div class="kpi blue"><label>Rými í rekstri</label><div class="val">2,976</div><div class="sub">Sóltún viðmið 2025</div></div>
+    <div class="kpi red"><label>Heildaþörf í dag</label><div class="val" id="kpi-demand-now">–</div><div class="sub" id="kpi-demand-sub">Þörfuhlutfall × mannfjöldi 67+</div></div>
+    <div class="kpi orange"><label>Biðlisti</label><div class="val" id="kpi-waitlist">–</div><div class="sub">Staðfest þörf, án rýmis</div></div>
+    <div class="kpi green"><label>Rýmavöntun — strax</label><div class="val" id="kpi-beds-now">–</div><div class="sub" id="kpi-beds-sub">Til að uppfylla markmiðsbiðtíma</div></div>
+    <div class="kpi teal"><label>Innritanir á ári</label><div class="val" id="kpi-annual-admit">–</div><div class="sub">Rými × veltuhlutfall</div></div>
+    <div class="kpi purple"><label>Reiknaður biðtími — 2025</label><div class="val" id="kpi-wait-time">–</div><div class="sub" id="kpi-wait-time-sub">dagar (markmið: 90 d.)</div></div>
   </div>
 
   <!-- ── STRATEGIC INSIGHTS ── -->
@@ -172,9 +173,9 @@
       <canvas id="waitChart" height="210"></canvas>
     </div>
     <div class="chart-box">
-      <h2>Þörfasamsetning eftir aldurshóp</h2>
-      <div class="chart-note">Blátt = framlag 67–79 ára hóps. Rautt = 80+ hópur. 80+ hluturinn vex hratt — knúinn af lýðfræðilegri þróun Íslands.</div>
-      <canvas id="stackChart" height="210"></canvas>
+      <h2>Meðalbiðtími (spáður)</h2>
+      <div class="chart-note">Biðlisti / (rými × veltuhlutfall / 365). Sýnir hvernig biðtími þróast — fer eftir dvalartíma og fjölda rýma. Rautt = yfir markmiðsbiðtíma.</div>
+      <canvas id="waitTimeChart" height="210"></canvas>
     </div>
   </div>
 
@@ -186,7 +187,7 @@
     </div>
     <div class="chart-box">
       <h2>Þróun eldri íbúa (Hagstofa MAN09010)</h2>
-      <div class="chart-note">Lýðfræðilega vélin á bak við alla eftirspurn. 80+ næstum tvöfaldast frá ~14.300 (2025) í ~28.000 (2040).</div>
+      <div class="chart-note">Staflað súlurit — elsti hópur efst. Fjólublá lína (hægri ás) sýnir 67+ sem % af öllum landsmönnum. MAN00101 (2025) + MAN09010 miðgildisspá (2026–2040).</div>
       <canvas id="popChart" height="210"></canvas>
     </div>
   </div>
@@ -200,9 +201,7 @@
           <th>Ár</th>
           <th>Framboð (rými)</th>
           <th>Þörf (líkan)</th>
-          <th>Bil</th>
-          <th>Þörf ríkis</th>
-          <th>Biðlisti</th>
+          <th>Rýmavöntun</th>
           <th>Innritanir á ári</th>
           <th>Ný rými</th>
         </tr>
@@ -213,13 +212,29 @@
 
   <!-- ── PROJECTS TABLE ── -->
   <div class="table-box">
-    <h2>Framkvæmdaáætlun ríkisins 2026–2030</h2>
-    <table>
+    <h2>Framkvæmdaáætlun — Stillanlegar afhendingardagsetningar</h2>
+    <div class="chart-note" style="margin-bottom:12px;">
+      Notaðu <strong>+/−</strong> til að seinka eða flýta hverju verkefni. Líkanið og gröfin uppfærast sjálfkrafa.
+      <span style="margin-left:10px;"><span class="govt-badge">RÍKI</span> Opinber áætlun</span>
+      <span style="margin-left:8px;"><span class="ppp-badge">PPP</span> Einkaaðilar / PPP — utan opinberrar áætlunar</span>
+    </div>
+    <table class="proj-table">
       <thead>
-        <tr><th>Ár</th><th>Verkefni</th><th>Landshluti</th><th>Ný rými</th></tr>
+        <tr>
+          <th>Áætlað ár</th>
+          <th>Verkefni</th>
+          <th>Landshluti</th>
+          <th style="text-align:center">Rými</th>
+          <th style="text-align:center">Leiðrétting</th>
+          <th style="text-align:center">Raunverulegt ár</th>
+        </tr>
       </thead>
       <tbody id="projectBody"></tbody>
     </table>
+    <div style="margin-top:10px;font-size:0.78rem;color:#9aacbc;">
+      * Hanið/lokið = staðfest í nýjustu gögnum Félags- og húsnæðismálaráðuneytisins (feb 2026) ·
+      Keilisbraut 90 merktur sem óstaðfestur í gögnum ráðuneytisins
+    </div>
   </div>
 
 
@@ -233,54 +248,57 @@
     <div class="ctrl-grid">
 
       <div class="ctrl-col">
-        <div class="ctrl-col-title red">Eftirspurnarlíkan</div>
+        <div class="ctrl-col-title red">Þörfuhlutfall eftir aldurshóp</div>
         <div class="ctrl-row">
-          <label>Hlutfall 67–79 ára á hjúkrunarheimili</label>
-          <input type="range" id="rate67" min="1" max="15" step="0.5" value="6">
-          <div class="ctrl-val" id="valRate67">6.0%</div>
+          <label>Biðlisti 2025</label>
+          <input type="range" id="waitInit" min="0" max="1200" step="50" value="650">
+          <div class="ctrl-val" id="valWaitInit">650</div>
         </div>
         <div class="ctrl-row">
-          <label>Hlutfall 80+ ára á hjúkrunarheimili</label>
-          <input type="range" id="rate80" min="5" max="30" step="0.5" value="15">
-          <div class="ctrl-val" id="valRate80">15.0%</div>
+          <label>67–69 ára</label>
+          <input type="range" id="rate6769" min="0" max="3" step="0.1" value="0.5">
+          <div class="ctrl-val" id="valRate6769">0.5%</div>
+        </div>
+        <div class="ctrl-row">
+          <label>70–79 ára</label>
+          <input type="range" id="rate7079" min="0" max="10" step="0.5" value="3.0">
+          <div class="ctrl-val" id="valRate7079">3.0%</div>
+        </div>
+        <div class="ctrl-row">
+          <label>80–89 ára</label>
+          <input type="range" id="rate8089" min="0" max="30" step="0.5" value="13.5">
+          <div class="ctrl-val" id="valRate8089">13.5%</div>
+        </div>
+        <div class="ctrl-row">
+          <label>90+ ára</label>
+          <input type="range" id="rate90p" min="0" max="70" step="1" value="40">
+          <div class="ctrl-val" id="valRate90p">40%</div>
         </div>
       </div>
 
       <div class="ctrl-col">
-        <div class="ctrl-col-title blue">Dvalartími</div>
+        <div class="ctrl-col-title blue">Dvalartími &amp; Markmið</div>
         <div class="ctrl-row">
           <label>Meðaldvöl hvers íbúa</label>
-          <input type="range" id="stayMonths" min="12" max="36" step="1" value="20">
+          <input type="range" id="stayMonths" min="6" max="36" step="1" value="20">
           <div class="ctrl-val" id="valStayMonths">20 mán.</div>
         </div>
         <div class="ctrl-row">
-          <label>Markmið um biðtíma</label>
-          <input type="range" id="targetWait" min="30" max="180" step="15" value="90">
+          <label>Markmiðsbiðtími ríkis</label>
+          <input type="range" id="targetWait" min="30" max="365" step="15" value="90">
           <div class="ctrl-val" id="valTargetWait">90 dagar</div>
         </div>
-        <div class="ctrl-row">
-          <label>Núverandi meðalbiðtími</label>
-          <input type="range" id="currentWait" min="30" max="365" step="15" value="180">
-          <div class="ctrl-val" id="valCurrentWait">180 dagar</div>
-        </div>
-        <div class="ctrl-row">
-          <label>Markmið ríkis: % biðlista sem fær rými innan 90 daga</label>
-          <input type="range" id="pct90" min="0" max="100" step="5" value="75">
-          <div class="ctrl-val" id="valPct90">75%</div>
+        <div style="font-size:0.68rem;color:#9aacbc;margin-top:4px;line-height:1.4;">
+          Reiknaður biðtími er <em>úttak</em> líkansins — ekki inntaksforsenda
         </div>
       </div>
 
       <div class="ctrl-col">
-        <div class="ctrl-col-title green">Biðlisti & Viðbótarrými efitr 2030</div>
-        <div class="ctrl-row">
-          <label>Biðlisti í dag (2026)</label>
-          <input type="range" id="waitInit" min="0" max="1000" step="50" value="700">
-          <div class="ctrl-val" id="valWaitInit">700</div>
-        </div>
+        <div class="ctrl-col-title green">Framboð eftir 2030</div>
         <div class="ctrl-row">
           <label>Ný rými/ár eftir 2030</label>
           <input type="range" id="postBuild" min="0" max="200" step="10" value="100">
-          <div class="ctrl-val" id="valPostBuild">100/yr</div>
+          <div class="ctrl-val" id="valPostBuild">100/ár</div>
         </div>
       </div>
 
@@ -289,14 +307,14 @@
 
   <!-- ── FLOW MECHANICS ── -->
   <div class="flow-box">
-    <h2>Forsendur líkans</h2>
+    <h2>Flæðigreining</h2>
     <div class="flow-metrics">
-      <div class="flow-m"><label>Meðaldvöl</label><div class="fval" id="fm-stay">20 mán.</div><div class="fsub">Á hvern íbúa</div></div>
-      <div class="flow-m"><label>Árleg endurnýjun</label><div class="fval" id="fm-turnover">–</div><div class="fsub">Rými sem losna á ári</div></div>
-      <div class="flow-m"><label>Innritanir á ári today</label><div class="fval" id="fm-admissions">–</div><div class="fsub">Frá núverandi 3.062 rýmum</div></div>
-      <div class="flow-m"><label>Rými sem losna á tímabili</label><div class="fval" id="fm-freed">–</div><div class="fsub" id="fm-freed-sub">75% af biðlista</div></div>
-      <div class="flow-m"><label>Rými til að hreinsa biðlista</label><div class="fval" id="fm-backlog">–</div><div class="fsub">Aukið rými til að ná markmiðum um biðtíma</div></div>
-      <div class="flow-m"><label>Nýtingarhlutfall</label><div class="fval">~100%</div><div class="fsub">Framboðsskortur</div></div>
+      <div class="flow-m"><label>Meðaldvöl</label><div class="fval" id="fm-stay">–</div><div class="fsub">Mánuðir á rými</div></div>
+      <div class="flow-m"><label>Veltuhlutfall</label><div class="fval" id="fm-turnover">–</div><div class="fsub">Innrit á ári per rými</div></div>
+      <div class="flow-m"><label>Innritanir á ári</label><div class="fval" id="fm-admissions">–</div><div class="fsub">Við 2.976 rými</div></div>
+      <div class="flow-m"><label>Rýmavöntun 2030</label><div class="fval" id="fm-gap2030">–</div><div class="fsub">Þörf − framboð</div></div>
+      <div class="flow-m"><label>Rýmavöntun 2040</label><div class="fval" id="fm-gap2040">–</div><div class="fsub">Þörf − framboð</div></div>
+      <div class="flow-m"><label>Rýmavöntun í dag</label><div class="fval" id="fm-backlog">–</div><div class="fsub" id="fm-backlog-sub">Þörf − framboð 2025</div></div>
     </div>
   </div>
 
@@ -310,186 +328,299 @@
 // ── STATIC DATA ───────────────────────────────────────────────────────────────
 const YEARS = [2025,2026,2027,2028,2029,2030,2031,2032,2033,2034,2035,2036,2037,2038,2039,2040];
 
-const POP67_79 = {2025:38800,2026:40749,2027:41919,2028:42881,2029:43533,2030:44331,2031:45084,2032:45821,2033:46485,2034:47077,2035:47460,2036:47613,2037:47748,2038:47713,2039:48105,2040:48777};
-const POP80P   = {2025:14300,2026:15153,2027:15853,2028:16680,2029:17586,2030:18490,2031:19458,2032:20383,2033:21282,2034:22300,2035:23270,2036:24291,2037:25347,2038:26446,2039:27304,2040:28247};
-
-const SUPPLY_PLAN = {2025:3062,2026:3216,2027:3498,2028:3949,2029:4277,2030:4417};
-const GOV_DEMAND  = {2026:3819,2027:3990,2028:4175,2029:4361,2030:4508};
+const POP_6769 = {2025:11322,2026:11526,2027:11647,2028:11604,2029:11588,2030:11588,2031:11700,2032:11979,2033:12045,2034:12142,2035:12058,2036:11895,2037:11710,2038:11643,2039:11942,2040:12586};
+const POP_7079 = {2025:28110,2026:29223,2027:30272,2028:31277,2029:31945,2030:32743,2031:33384,2032:33842,2033:34440,2034:34935,2035:35402,2036:35718,2037:36038,2038:36070,2039:36163,2040:36191};
+const POP_8089 = {2025:11713,2026:12567,2027:13203,2028:13976,2029:14852,2030:15686,2031:16558,2032:17361,2033:18061,2034:18865,2035:19604,2036:20342,2037:21144,2038:21943,2039:22475,2040:23115};
+const POP_90P  = {2025:2497, 2026:2586, 2027:2650, 2028:2704, 2029:2734, 2030:2804, 2031:2900, 2032:3022, 2033:3221, 2034:3435, 2035:3666, 2036:3949, 2037:4203, 2038:4503, 2039:4829, 2040:5132};
+const BEDS_2025 = 2976;
 
 const PROJECTS = [
-  {yr:2026,name:"Urðarhvarf",       rooms:100, region:"Höfuðborgarsvæðið"},
-  {yr:2026,name:"Nesvellir",        rooms:50,  region:"Suðurnesja"},
-  {yr:2026,name:"Ísafold",          rooms:4,   region:"Höfuðborgarsvæðið"},
-  {yr:2027,name:"Sólitún",          rooms:67,  region:"Höfuðborgarsvæðið"},
-  {yr:2027,name:"Keilisbraut",      rooms:90,  region:"Suðurnesja"},
-  {yr:2027,name:"Húsavík",          rooms:6,   region:"Norðurland"},
-  {yr:2027,name:"Nauthólsvegur",    rooms:87,  region:"Höfuðborgarsvæðið"},
-  {yr:2027,name:"Hveragerði",       rooms:26,  region:"Suðurland"},
-  {yr:2027,name:"Höfn",             rooms:6,   region:"Austurland"},
-  {yr:2028,name:"Þursaholt",        rooms:140, region:"Norðurland"},
-  {yr:2028,name:"Mosfellsbær",      rooms:66,  region:"Höfuðborgarsvæðið"},
-  {yr:2028,name:"Akranes",          rooms:60,  region:"Vesturland"},
-  {yr:2028,name:"Hraunvangur",      rooms:125, region:"Höfuðborgarsvæðið"},
-  {yr:2028,name:"Eir Grafarvogur",  rooms:60,  region:"Höfuðborgarsvæðið"},
-  {yr:2029,name:"Patreksfjörður",   rooms:0,   region:"Vestfjarðar"},
-  {yr:2029,name:"Eyri",             rooms:20,  region:"Austurland"},
-  {yr:2029,name:"Vík",              rooms:0,   region:"Suðurland"},
-  {yr:2029,name:"Vigdísarholt",     rooms:108, region:"Höfuðborgarsvæðið"},
-  {yr:2029,name:"Reykjavík",        rooms:100, region:"Höfuðborgarsvæðið"},
-  {yr:2029,name:"Vetrarmýri",       rooms:100, region:"Höfuðborgarsvæðið"},
-  {yr:2030,name:"Austurland",       rooms:20,  region:"Austurland"},
-  {yr:2030,name:"Suðurland",        rooms:40,  region:"Suðurland"},
-  {yr:2030,name:"Óákveðið",         rooms:80,  region:"Höfuðborgarsvæðið"},
+  {name:"Urðarhvarf",       region:"Höfuðborgarsvæðið", rooms:100, year:2026, type:"confirmed"},
+  {name:"Nesvellir",        region:"Suðurnesja",          rooms: 50, year:2026, type:"confirmed"},
+  {name:"Ísafold",          region:"Höfuðborgarsvæðið", rooms:  4, year:2026, type:"confirmed"},
+  {name:"Hamranes",         region:"Höfuðborgarsvæðið", rooms: 99, year:2026, type:"ppp"},
+  {name:"Sóltún RVK",       region:"Höfuðborgarsvæðið", rooms: 67, year:2027, type:"confirmed"},
+  {name:"Keilisbraut",      region:"Suðurnesja",          rooms: 90, year:2027, type:"planned"},
+  {name:"Húsavík",          region:"Norðurland",           rooms:  6, year:2027, type:"confirmed"},
+  {name:"Nauthólsvegur",    region:"Höfuðborgarsvæðið", rooms: 87, year:2027, type:"confirmed"},
+  {name:"Hveragerði",       region:"Suðurland",            rooms: 26, year:2027, type:"confirmed"},
+  {name:"Höfn",             region:"Austurland",           rooms:  6, year:2027, type:"confirmed"},
+  {name:"Þursaholt",        region:"Norðurland",           rooms:140, year:2028, type:"planned"},
+  {name:"Mosfellsbær",      region:"Höfuðborgarsvæðið", rooms: 66, year:2028, type:"planned"},
+  {name:"Akranes",          region:"Vesturland",           rooms: 60, year:2028, type:"planned"},
+  {name:"Hraunvangur",      region:"Höfuðborgarsvæðið", rooms:125, year:2028, type:"planned"},
+  {name:"Eir Grafarvogur",  region:"Höfuðborgarsvæðið", rooms: 60, year:2028, type:"planned"},
+  {name:"Vigdísarholt",     region:"Höfuðborgarsvæðið", rooms:108, year:2029, type:"ppp"},
+  {name:"Eyri",             region:"Austurland",           rooms: 20, year:2029, type:"planned"},
+  {name:"Vetrarmýri",       region:"Höfuðborgarsvæðið", rooms:100, year:2029, type:"planned"},
+  {name:"Reykjavík (ógr.)", region:"Höfuðborgarsvæðið", rooms:100, year:2029, type:"planned"},
+  {name:"Patreksfjörður",   region:"Vestfjarðar",          rooms:  0, year:2029, type:"planned"},
+  {name:"Vík í Mýrdal",    region:"Suðurland",            rooms:  0, year:2029, type:"planned"},
+  {name:"Austurland (ógr.)",region:"Austurland",           rooms: 20, year:2030, type:"planned"},
+  {name:"Suðurland (ógr.)", region:"Suðurland",            rooms: 40, year:2030, type:"planned"},
+  {name:"Óákveðið",         region:"Höfuðborgarsvæðið", rooms: 80, year:2030, type:"planned"},
 ];
 
 // ── STATE ─────────────────────────────────────────────────────────────────────
-let rate67 = 0.06, rate80 = 0.15;
-let stayMonths = 20, targetWait = 90, currentWait = 180, pct90 = 75;
-let waitInit = 700, postBuild = 100;
+let adjustments = PROJECTS.map(() => 0);
+let waitInit   = 650;
+let rate6769   = 0.5;
+let rate7079   = 3.0;
+let rate8089   = 13.5;
+let rate90p    = 40.0;
+let stayMonths = 20;
+let targetWait = 90;
+let postBuild  = 100;
 
-// ── COMPUTED ──────────────────────────────────────────────────────────────────
-const fmt = n => Math.round(n).toLocaleString('en-IS');
-const fmtSign = n => (n>=0?'+':'')+fmt(n);
+// ── CORE MODEL ────────────────────────────────────────────────────────────────
+function effYear(i) { return PROJECTS[i].year + adjustments[i]; }
 
-function getDemand(y) {
-  return Math.round((POP67_79[y]||0)*rate67 + (POP80P[y]||0)*rate80);
-}
 function getSupply(y) {
-  if (y <= 2030) return SUPPLY_PLAN[y] ?? SUPPLY_PLAN[2030];
-  return SUPPLY_PLAN[2030] + (y-2030)*postBuild;
+  let total = BEDS_2025;
+  PROJECTS.forEach((p, i) => { if (p.rooms > 0 && effYear(i) <= y) total += p.rooms; });
+  if (y > 2030) total += (y - 2030) * postBuild;
+  return total;
 }
-function turnoverRate() { return 12 / stayMonths; }
-function annualAdmissions(beds) { return Math.round(beds * turnoverRate()); }
-// How many of waiting list get served within 90 days, based on % target
-function bedsFreedInWindow(beds) { return Math.round(waitInit * pct90 / 100); }
 
-function getWaitingList() {
-  const wl = {2025: null, 2026: waitInit};
-  for (let i = 2; i < YEARS.length; i++) {
-    const y = YEARS[i], prev = YEARS[i-1];
-    const demandGrowth = getDemand(y) - getDemand(prev);
-    const newRooms     = getSupply(y) - getSupply(prev);
-    wl[y] = Math.max(0, (wl[prev]||0) + demandGrowth - newRooms);
+// Stock demand = rooms needed at any moment
+// KPMG rates calibrated at 20 month baseline stay.
+// Longer stays → more rooms occupied simultaneously → higher demand
+const STAY_BASELINE = 20;
+function getDemandStock(y) {
+  const base = (POP_6769[y]||0)*rate6769/100 + (POP_7079[y]||0)*rate7079/100 +
+               (POP_8089[y]||0)*rate8089/100 + (POP_90P[y]||0)*rate90p/100;
+  return Math.round(base * stayMonths / STAY_BASELINE);
+}
+
+// For main supply/demand chart: stock demand (rooms needed by population)
+function getDemand(y) {
+  // Stock need + waitlist component (scaled by pop growth from 2025)
+  const popGrowth = ((POP_6769[y]||0)+(POP_7079[y]||0)+(POP_8089[y]||0)+(POP_90P[y]||0)) /
+                    (POP_6769[2025]+POP_7079[2025]+POP_8089[2025]+POP_90P[2025]);
+  return getDemandStock(y) + Math.round(waitInit * popGrowth);
+}
+function getGap(y) { return getRoomGap(y); }
+
+// Structural room gap (does not depend on stayMonths)
+function getRoomGap(y) { return getDemandStock(y) - getSupply(y); }
+
+function turnoverRate()         { return 12 / stayMonths; }
+function annualAdmissions(beds) { return Math.round(beds * turnoverRate()); }
+
+// Flow model: waitlist evolves year by year
+// Each year: net_change = (demand_stock - supply) × turnover_rate
+// = structural_gap × turnover — so stayMonths directly drives waitlist speed
+function computeWaitlist() {
+  const wl = {};
+  // 2025 starting waitlist = structural room gap + known waitlisted (slider)
+  let current = Math.max(0, getRoomGap(2025)) + waitInit;
+  wl[2025] = current;
+  for (let y = 2026; y <= 2040; y++) {
+    const delta = Math.round(getRoomGap(y) * turnoverRate());
+    current = Math.max(0, current + delta);
+    wl[y] = current;
   }
   return wl;
 }
 
-// ── UPDATE KPIs & FLOW BOX ────────────────────────────────────────────────────
+// Cached waitlist — rebuilt on every renderAll
+let _waitlist = null;
+function getWaitlist(y) {
+  if (!_waitlist) _waitlist = computeWaitlist();
+  return _waitlist[y] ?? 0;
+}
+
+function calcWaitDays(y) {
+  const wl = getWaitlist(y);
+  if (wl <= 0) return 0;
+  return Math.round(wl / (getSupply(y) * turnoverRate() / 365));
+}
+
+function bedsNeededNow() { return Math.max(0, getRoomGap(2025)); }
+
+const fmt     = n => Math.round(n).toLocaleString('is-IS');
+const fmtSign = n => (n >= 0 ? '+' : '') + fmt(n);
+
+// ── UPDATE KPIs & INSIGHTS ────────────────────────────────────────────────────
 function updateKPIs() {
-  const demand2026  = getDemand(2026);
-  const supply2026  = 3062;
-  const regGap      = waitInit;                     // registered = waiting list
-  const freed       = bedsFreedInWindow(supply2026);
-  const bedsNeeded  = Math.max(0, waitInit - freed); // extra beds to meet target wait
-  const annAdmit    = annualAdmissions(supply2026);
-  const wl          = getWaitingList();
-  const wl2040      = wl[2040] || 0;
+  const d25   = getDemand(2025), wt25 = calcWaitDays(2025);
+  const admit = annualAdmissions(BEDS_2025);
+  const bNow  = bedsNeededNow();
+  const adjCount = adjustments.filter(a=>a!==0).length;
 
-  document.getElementById('kpi-demand-now').textContent   = fmt(demand2026);
-  document.getElementById('kpi-reg-gap').textContent      = fmt(regGap);
-  const modelGap2026 = getDemand(2026) - 3062;
-  document.getElementById('kpi-reg-gap-sub').textContent = 'af ' + fmt(modelGap2026) + ' reiknaðs bils';
-  document.getElementById('kpi-beds-now').textContent     = fmt(bedsNeeded);
-  document.getElementById('kpi-annual-admit').textContent = fmt(annAdmit);
+  document.getElementById('kpi-demand-now').textContent = fmt(d25);
+  document.getElementById('kpi-waitlist').textContent    = fmt(getWaitlist(2025));
+  document.getElementById('kpi-demand-sub').textContent =
+    '67-69: '+fmt(Math.round((POP_6769[2025]||0)*rate6769/100))+
+    ' · 70-79: '+fmt(Math.round((POP_7079[2025]||0)*rate7079/100))+
+    ' · 80-89: '+fmt(Math.round((POP_8089[2025]||0)*rate8089/100))+
+    ' · 90+: '+fmt(Math.round((POP_90P[2025]||0)*rate90p/100))+
+    ' · Biðlisti: '+fmt(waitInit);
+  document.getElementById('kpi-wait-time').textContent     = wt25 > 0 ? fmt(wt25) : '0';
+  document.getElementById('kpi-wait-time-sub').textContent = 'dagar — markmið: '+targetWait+' d.';
+  document.getElementById('kpi-beds-now').textContent      = fmt(bNow);
+  document.getElementById('kpi-beds-sub').textContent      = 'Bil á milli þarfar og framboðs';
+  document.getElementById('kpi-annual-admit').textContent  = fmt(admit);
 
-  // Flow box
-  document.getElementById('fm-stay').textContent       = stayMonths+' mán.';
-  document.getElementById('fm-turnover').textContent   = turnoverRate().toFixed(2)+'×';
-  document.getElementById('fm-admissions').textContent = fmt(annAdmit);
-  document.getElementById('fm-freed').textContent      = fmt(freed);
-  document.getElementById('fm-backlog').textContent    = fmt(bedsNeeded);
-  document.getElementById('fm-freed-sub').textContent  = pct90+'% af biðlista';
-
-  // Insights
-  const gap2030 = getSupply(2030) - getDemand(2030);
-  const gap2040 = getSupply(2040) - getDemand(2040);
+  document.getElementById('fm-stay').textContent        = stayMonths+' mán.';
+  document.getElementById('fm-turnover').textContent    = turnoverRate().toFixed(2)+'×';
+  document.getElementById('fm-admissions').textContent  = fmt(admit);
+  const wl2030 = getWaitlist(2030), wl2040 = getWaitlist(2040);
+  document.getElementById('fm-gap2030').textContent     = fmt(wl2030);
+  document.getElementById('fm-gap2040').textContent     = fmt(wl2040);
+  document.getElementById('fm-backlog').textContent     = fmt(waitInit);
+  document.getElementById('fm-backlog-sub').textContent = 'Upphafsstærð biðlista 2025';
+  document.getElementById('fm-gap2030').style.color     = wl2030>300 ? '#c0392b' : wl2030>0 ? '#e67e22' : '#27ae60';
+  document.getElementById('fm-gap2040').style.color     = wl2040>300 ? '#c0392b' : wl2040>0 ? '#e67e22' : '#27ae60';
 
   document.getElementById('insight-immediate').innerHTML =
-    `Það eru <strong>${fmt(waitInit)} manns</strong> á biðlista með staðfest læknisvottorð — þetta er <em>skráð</em> eftirspurn. Heildarbilið samkvæmt 6%/15% líkaninu er <strong>${fmt(modelGap2026)} rými</strong> — biðlistinn (${fmt(waitInit)}) er skráður hluti þess. Samkvæmt markmiði ríkisins um að <strong>${pct90}% biðlista fái rými innan 90 daga</strong> þarf að losa <strong>${fmt(freed)} rými</strong> á þessu tímabili — sem skilur eftir <strong>skipulegan skort upp á ${fmt(bedsNeeded)} rými í dag</strong>, óháð framtíðarþróun mannfjölda.`;
+    `Heildaþörf 2025 er <strong>${fmt(d25)} rými</strong>. `+
+    `Rýmavöntun (rými): <strong>${fmt(bNow)}</strong>. `+
+    `Biðlisti 2025: <strong>${fmt(waitInit)}</strong> einstaklingar. `+
+    `Reiknaður biðtími: <strong>${fmt(wt25)} dagar</strong>.`;
 
-  const bedsNeeded2030 = Math.abs(Math.min(0, gap2030));
   document.getElementById('insight-growth').innerHTML =
-    `80+ hópurinn næstum tvöfaldast frá ~14.300 (2025) í ~28.200 (2040) samkvæmt Hagstofu MAN09010. Jafnvel þótt ríkisáætlunin skili 4.417 rýmum fyrir 2030 spáir líkanið okkar <strong>bili upp á ${fmt(Math.abs(gap2030))} rými</strong> árið 2030 — vaxandi í <strong>${fmt(Math.abs(gap2040))} rými</strong> árið 2040 við ${postBuild} rými/ár eftir 2030.`;
+    `90+ hópurinn tvöfaldast — úr <strong>${fmt(POP_90P[2025])}</strong> (2025) í <strong>${fmt(POP_90P[2040])}</strong> (2040). `+
+    `Heildaþörf hækkar úr <strong>${fmt(d25)}</strong> í <strong>${fmt(getDemand(2040))}</strong>. `+
+    `Biðlisti: ${fmt(getWaitlist(2030))} (2030) → <strong>${fmt(getWaitlist(2040))} (2040)</strong>.`;
 
   document.getElementById('insight-build').innerHTML =
-    `Ríkið áætlar <strong>1.355 ný rými</strong> fyrir lok 2030 í yfir 20 verkefnum. Til að loka spáðu 2030-bilinu að fullu þyrfti um <strong>${fmt(Math.abs(gap2030))} viðbótarrými</strong> umfram núverandi áætlun — skýrt tækifæri fyrir einkaþróun. Árslegar innlagnir við marknýtingu ná <strong>${fmt(annualAdmissions(getSupply(2030)))} á ári</strong> árið 2030.`;
+    `Framkvæmdaáætlun gefur <strong>${fmt(getSupply(2030))} rými</strong> árið 2030`+
+    (adjCount>0 ? ` (${adjCount} verkefni með leiðréttingu)` : '')+`. `+
+    `Biðlisti 2030: <strong>${fmt(getWaitlist(2030))}</strong> · `+
+    `Biðlisti 2040: <strong>${fmt(getWaitlist(2040))}</strong> (við ${postBuild} rými/ár eftir 2030).`;
 
   document.getElementById('insight-risk').innerHTML =
-    `Þörfamat ríkisins (75% þröskuldur) er verulega lægra en 6%/15% líkanið okkar, sem gefur til kynna að <strong>áætlunin gæti dugað samkvæmt eigin mælikvörðum þeirra</strong>. Lykiláhætta fyrir þróunaraðila er hvort opinber fjármögnun, skipulagsleyfi og rekstrarstyrkur verði tiltækur fyrir einkabyggt rými. Hins vegar þýðir <strong>skipulegur skortur og 100% nýting</strong> að tekjuáhætta er lítil þegar búið er að byggja.`;
+    `Hlutföllin ${rate6769}% / ${rate7079}% / ${rate8089}% / ${rate90p}% eru sömu forsendur og KPMG notar. `+
+    `Biðlisti þróast með flæðilíkani: (rýmavöntun × veltuhlutfall) bætist við á hverju ári. `+
+    `Styttri dvalartími → hraðari velting → biðlisti minnkar hraðar. `+
+    `Reiknaður biðtími <strong>${fmt(wt25)} dagar</strong> 2025.`;
+}
+
+// ── PROJECT TABLE ─────────────────────────────────────────────────────────────
+function buildProjectTable() {
+  const tbody = document.getElementById('projectBody');
+  const effYearMap = {};
+  PROJECTS.forEach((p,i) => {
+    const ey = effYear(i);
+    if (!effYearMap[ey]) effYearMap[ey] = [];
+    effYearMap[ey].push({...p, i});
+  });
+  const sortedYears = Object.keys(effYearMap).map(Number).sort();
+  let html = '';
+
+  sortedYears.forEach(ey => {
+    const group = effYearMap[ey];
+    const supplyEOY = getSupply(ey);
+    const addedThisYear = group.reduce((s,p) => s+(p.rooms||0), 0);
+    html += `<tr class="proj-year-group">
+      <td colspan="4"><strong>${ey}</strong> — Framboð í árslok: <strong>${fmt(supplyEOY)}</strong></td>
+      <td colspan="2" style="text-align:right">Viðbót þetta ár: <strong>+${fmt(addedThisYear)}</strong></td>
+    </tr>`;
+    group.forEach(p => {
+      const adj = adjustments[p.i];
+      const eyClass = adj>0?'delayed':adj<0?'early':'ontime';
+      const eyLabel = adj>0?`${ey} ⚠`:adj<0?`${ey} ↑`:`${ey}`;
+      const adjLabel = adj===0?'0':adj>0?`+${adj}`:`${adj}`;
+      const adjClass = adj>0?'positive':adj<0?'negative':'';
+      const isPPP = p.type==='ppp';
+      const badge = isPPP
+        ? `<span class="ppp-badge">PPP</span>`
+        : (p.type==='confirmed'
+            ? `<span class="govt-badge" style="background:#27ae60">✓</span>`
+            : `<span class="govt-badge">RÍKI</span>`);
+      const origNote = adj!==0 ? `<span style="font-size:0.68rem;color:#9aacbc"> (áætl. ${p.year})</span>` : '';
+      html += `<tr class="${isPPP?'ppp-row':''}">
+        <td><span class="yr-badge">${p.year}</span></td>
+        <td>${p.name}${badge}${origNote}</td>
+        <td style="color:#666;font-size:0.78rem">${p.region}</td>
+        <td class="rooms-cell" style="text-align:center">${p.rooms>0?'+'+p.rooms:'—'}</td>
+        <td><div class="adj-cell">
+          <button class="adj-btn" onclick="adjust(${p.i},+1)" title="Seinka um 1 ár">+</button>
+          <span class="adj-display ${adjClass}">${adjLabel}y</span>
+          <button class="adj-btn" onclick="adjust(${p.i},-1)" title="Flýta um 1 ár">−</button>
+        </div></td>
+        <td><span class="eff-year ${eyClass}">${eyLabel}</span></td>
+      </tr>`;
+    });
+  });
+
+  const totalRooms = PROJECTS.reduce((s,p)=>s+p.rooms,0);
+  const govtRooms  = PROJECTS.filter(p=>p.type!=='ppp').reduce((s,p)=>s+p.rooms,0);
+  const pppRooms   = PROJECTS.filter(p=>p.type==='ppp').reduce((s,p)=>s+p.rooms,0);
+  html += `<tr class="proj-grand">
+    <td colspan="3"><strong>Heildarsumma 2026–2030</strong></td>
+    <td style="text-align:center;color:white"><strong>+${fmt(totalRooms)}</strong></td>
+    <td colspan="2" style="color:#adc8e0;font-size:0.78rem">Ríki: +${fmt(govtRooms)} · PPP: +${fmt(pppRooms)}</td>
+  </tr>`;
+  tbody.innerHTML = html;
+}
+
+function adjust(idx, delta) {
+  const n = adjustments[idx] + delta;
+  if (n < -3 || n > 7) return;
+  adjustments[idx] = n;
+  renderAll();
 }
 
 // ── CHARTS ────────────────────────────────────────────────────────────────────
-let mainChart, waitChart, stackChart, flowChart, popChart;
+let mainChart, waitChart, waitTimeChart, flowChart, popChart;
 
 function buildMainChart() {
-  const demand  = YEARS.map(y => getDemand(y));
-  const supply  = YEARS.map(y => getSupply(y));
-  const govD    = YEARS.map(y => GOV_DEMAND[y]||null);
-  const gap     = YEARS.map((y,i) => Math.max(0, demand[i] - supply[i]));
+  const demand = YEARS.map(y=>getDemand(y));
+  const supply = YEARS.map(y=>getSupply(y));
+  const gap    = YEARS.map((y,i)=>Math.max(0,demand[i]-supply[i]));
   const ctx = document.getElementById('mainChart').getContext('2d');
   if (mainChart) mainChart.destroy();
   mainChart = new Chart(ctx, {
-    data:{
-      labels: YEARS,
-      datasets:[
-        {type:'bar',   label:'Óuppfyllt þörf (bil)', data:gap,   backgroundColor:'rgba(192,57,43,0.15)', borderColor:'rgba(192,57,43,0.3)', borderWidth:1, yAxisID:'y'},
-        {type:'line',  label:'Framboð (rými)',       data:supply, borderColor:'#1a6eb5', backgroundColor:'rgba(26,110,181,0.06)', borderWidth:2.5, pointRadius:4, fill:false, tension:0.15},
-        {type:'line',  label:'Þörf (6%/15%)',     data:demand, borderColor:'#c0392b', borderWidth:2.5, pointRadius:4, fill:false, tension:0.15},
-        {type:'line',  label:'Þörfamat ríkis (75%)', data:govD, borderColor:'#e67e22', borderDash:[6,4], borderWidth:2, pointRadius:3, fill:false, tension:0.15},
-      ]
-    },
-    options:{
-      responsive:true, interaction:{mode:'index',intersect:false},
+    data:{labels:YEARS, datasets:[
+      {type:'bar',  label:'Rýmavöntun', data:gap, backgroundColor:'rgba(192,57,43,0.15)', borderColor:'rgba(192,57,43,0.3)', borderWidth:1},
+      {type:'line', label:'Framboð (rými)', data:supply, borderColor:'#1a6eb5', backgroundColor:'rgba(26,110,181,0.06)', borderWidth:2.5, pointRadius:4, fill:false, tension:0.15},
+      {type:'line', label:'Þörf (4 aldurshópar + biðlisti)', data:demand, borderColor:'#c0392b', borderWidth:2.5, pointRadius:4, fill:false, tension:0.15},
+    ]},
+    options:{responsive:true, interaction:{mode:'index',intersect:false},
       plugins:{legend:{position:'bottom',labels:{boxWidth:13,font:{size:11}}},
         tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${c.raw!=null?fmt(c.raw):'—'}`}}},
-      scales:{
-        y:{min:0,beginAtZero:true,title:{display:true,text:'Rými'},ticks:{callback:v=>fmt(v)},grid:{color:'#f5f7fa'}},
-        x:{grid:{color:'#f5f7fa'}}
-      }
-    }
+      scales:{y:{min:0,
+        suggestedMax: Math.ceil(Math.max(...YEARS.filter(y=>y<=2032).map(y=>getDemand(y))) / 500) * 500,
+        title:{display:true,text:'Rými'},ticks:{callback:v=>fmt(v)},grid:{color:'#f5f7fa'}},
+              x:{grid:{color:'#f5f7fa'}}}}
   });
 }
 
 function buildWaitChart() {
-  const wl = getWaitingList();
-  const data   = YEARS.map(y => wl[y]);
-  const colors = data.map(v => v==null?'transparent':v>500?'rgba(192,57,43,0.7)':v>200?'rgba(230,126,34,0.7)':'rgba(39,174,96,0.7)');
+  const data   = YEARS.map(y => getWaitlist(y));
+  const colors = data.map(v=>v>800?'rgba(192,57,43,0.7)':v>300?'rgba(230,126,34,0.7)':'rgba(39,174,96,0.7)');
   const ctx = document.getElementById('waitChart').getContext('2d');
   if (waitChart) waitChart.destroy();
   waitChart = new Chart(ctx, {
     type:'bar',
-    data:{labels:YEARS, datasets:[{label:'Biðlisti',data,backgroundColor:colors,borderWidth:0}]},
-    options:{
-      responsive:true,
-      plugins:{legend:{display:false}, tooltip:{callbacks:{label:c=>`Biðlisti: ${c.raw!=null?fmt(c.raw):'—'} manns`}}},
-      scales:{
-        y:{beginAtZero:true,title:{display:true,text:'Manns á biðlista'},ticks:{callback:v=>fmt(v)},grid:{color:'#f5f7fa'}},
-        x:{grid:{color:'#f5f7fa'}}
-      }
-    }
+    data:{labels:YEARS, datasets:[{label:'Biðlisti (einstaklingar)', data, backgroundColor:colors, borderWidth:0}]},
+    options:{responsive:true, plugins:{legend:{display:false},
+        tooltip:{callbacks:{label:c=>`Biðlisti: ${fmt(c.raw)} einstaklingar`}}},
+      scales:{y:{beginAtZero:true,
+        suggestedMax: Math.ceil(Math.max(...YEARS.filter(y=>y<=2032).map(y=>getWaitlist(y))) / 200) * 200,
+        title:{display:true,text:'Einstaklingar á biðlista'},ticks:{callback:v=>fmt(v)},grid:{color:'#f5f7fa'}},
+              x:{grid:{color:'#f5f7fa'}}}}
   });
 }
 
-function buildStackChart() {
-  const ctx = document.getElementById('stackChart').getContext('2d');
-  if (stackChart) stackChart.destroy();
-  stackChart = new Chart(ctx, {
-    type:'bar',
-    data:{
-      labels:YEARS,
-      datasets:[
-        {label:'80+ yrs ('+Math.round(rate80*100)+'%)', data:YEARS.map(y=>Math.round(POP80P[y]*rate80)),   backgroundColor:'rgba(192,57,43,0.7)', stack:'d'},
-        {label:'67–79 yrs ('+Math.round(rate67*100)+'%)', data:YEARS.map(y=>Math.round(POP67_79[y]*rate67)), backgroundColor:'rgba(26,110,181,0.65)', stack:'d'},
-      ]
-    },
-    options:{
-      responsive:true,
-      plugins:{legend:{position:'bottom',labels:{boxWidth:12,font:{size:11}}}},
-      scales:{
-        x:{stacked:true,ticks:{font:{size:10}}},
-        y:{stacked:true,beginAtZero:true,title:{display:true,text:'Þörf (rými)'},ticks:{callback:v=>fmt(v)},grid:{color:'#f5f7fa'}}
-      }
-    }
+function buildWaitTimeChart() {
+  const data   = YEARS.map(y=>calcWaitDays(y)); // uses waitlist flow model
+  const target = YEARS.map(()=>targetWait);
+  const colors = data.map(v=>v>targetWait?'rgba(192,57,43,0.65)':v>0?'rgba(230,126,34,0.65)':'rgba(39,174,96,0.65)');
+  const ctx = document.getElementById('waitTimeChart').getContext('2d');
+  if (waitTimeChart) waitTimeChart.destroy();
+  waitTimeChart = new Chart(ctx, {
+    data:{labels:YEARS, datasets:[
+      {type:'bar',  label:'Reiknaður biðtími (dagar)', data, backgroundColor:colors, borderWidth:0},
+      {type:'line', label:'Markmiðsbiðtími', data:target, borderColor:'#e67e22', borderDash:[5,4], borderWidth:2, pointRadius:0, fill:false},
+    ]},
+    options:{responsive:true,
+      plugins:{legend:{position:'bottom',labels:{boxWidth:12,font:{size:11}}},
+        tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${fmt(c.raw)} dagar`}}},
+      scales:{y:{beginAtZero:true,title:{display:true,text:'Dagar'},ticks:{callback:v=>fmt(v)},grid:{color:'#f5f7fa'}},
+              x:{grid:{color:'#f5f7fa'}}}}
   });
 }
 
@@ -498,117 +629,104 @@ function buildFlowChart() {
   if (flowChart) flowChart.destroy();
   flowChart = new Chart(ctx, {
     type:'line',
-    data:{
-      labels:YEARS,
-      datasets:[{
-        label:'Innritanir á ári (beds × turnover rate)',
-        data: YEARS.map(y => annualAdmissions(getSupply(y))),
-        borderColor:'#0e8a7a', backgroundColor:'rgba(14,138,122,0.1)', fill:true, borderWidth:2.5, tension:0.3, pointRadius:4
-      }]
-    },
-    options:{
-      responsive:true,
-      plugins:{legend:{position:'bottom',labels:{boxWidth:12,font:{size:11}}}},
-      scales:{
-        y:{beginAtZero:false,title:{display:true,text:'Innritanir á ári'},ticks:{callback:v=>fmt(v)},grid:{color:'#f5f7fa'}},
-        x:{grid:{color:'#f5f7fa'}}
-      }
-    }
+    data:{labels:YEARS, datasets:[{
+      label:'Innritanir á ári (rými × veltuhlutfall)',
+      data:YEARS.map(y=>annualAdmissions(getSupply(y))),
+      borderColor:'#0e8a7a', backgroundColor:'rgba(14,138,122,0.1)', fill:true, borderWidth:2.5, tension:0.3, pointRadius:4
+    }]},
+    options:{responsive:true, plugins:{legend:{position:'bottom',labels:{boxWidth:12,font:{size:11}}}},
+      scales:{y:{beginAtZero:false,title:{display:true,text:'Innritanir á ári'},ticks:{callback:v=>fmt(v)},grid:{color:'#f5f7fa'}},
+              x:{grid:{color:'#f5f7fa'}}}}
   });
 }
 
 function buildPopChart() {
+  const totalPop = {2025:380000,2026:390000,2027:400000,2028:408000,2029:416000,2030:424000,
+    2031:431000,2032:438000,2033:445000,2034:452000,2035:458000,2036:463000,2037:468000,2038:473000,2039:477000,2040:481000};
+  const pct67p = YEARS.map(y => {
+    const pop67 = (POP_6769[y]||0)+(POP_7079[y]||0)+(POP_8089[y]||0)+(POP_90P[y]||0);
+    return +((pop67/totalPop[y])*100).toFixed(1);
+  });
   const ctx = document.getElementById('popChart').getContext('2d');
   if (popChart) popChart.destroy();
   popChart = new Chart(ctx, {
-    type:'line',
-    data:{
-      labels:YEARS,
-      datasets:[
-        {label:'80+ ára', data:YEARS.map(y=>POP80P[y]),   borderColor:'#c0392b', backgroundColor:'rgba(192,57,43,0.08)', fill:true, borderWidth:2.5, tension:0.3},
-        {label:'67–79 ára', data:YEARS.map(y=>POP67_79[y]), borderColor:'#1a6eb5', backgroundColor:'rgba(26,110,181,0.07)', fill:true, borderWidth:2.5, tension:0.3},
-      ]
-    },
-    options:{
-      responsive:true,
-      plugins:{legend:{position:'bottom',labels:{boxWidth:12,font:{size:11}}}},
+    data:{labels:YEARS, datasets:[
+      {type:'bar', label:'67–69 ára', data:YEARS.map(y=>POP_6769[y]), backgroundColor:'rgba(14,138,122,0.7)', stack:'pop'},
+      {type:'bar', label:'70–79 ára', data:YEARS.map(y=>POP_7079[y]), backgroundColor:'rgba(26,110,181,0.7)', stack:'pop'},
+      {type:'bar', label:'80–89 ára', data:YEARS.map(y=>POP_8089[y]), backgroundColor:'rgba(230,126,34,0.8)', stack:'pop'},
+      {type:'bar', label:'90+ ára',   data:YEARS.map(y=>POP_90P[y]),  backgroundColor:'rgba(192,57,43,0.85)', stack:'pop'},
+      {type:'line', label:'% af þjóðinni (67+)', data:pct67p,
+       borderColor:'#8e44ad', backgroundColor:'transparent', borderWidth:2.5, pointRadius:4,
+       pointBackgroundColor:'#8e44ad', fill:false, tension:0.3, yAxisID:'y2'},
+    ]},
+    options:{responsive:true,
+      plugins:{legend:{position:'bottom',labels:{boxWidth:12,font:{size:11}}},
+        tooltip:{callbacks:{label:c=>c.dataset.yAxisID==='y2'?`${c.dataset.label}: ${c.raw}%`:`${c.dataset.label}: ${fmt(c.raw)}`}}},
       scales:{
-        y:{title:{display:true,text:'Mannfjöldi'},ticks:{callback:v=>fmt(v)},grid:{color:'#f5f7fa'}},
+        y:{stacked:true,title:{display:true,text:'Mannfjöldi (67+)'},ticks:{callback:v=>fmt(v)},grid:{color:'#f5f7fa'}},
+        y2:{position:'right',title:{display:true,text:'% af þjóðinni'},min:10,max:25,ticks:{callback:v=>v+'%'},grid:{drawOnChartArea:false}},
         x:{grid:{color:'#f5f7fa'}}
       }
     }
   });
 }
 
-// ── TABLE ────────────────────────────────────────────────────────────────────
+// ── DATA TABLE ────────────────────────────────────────────────────────────────
 function buildTable() {
-  const wl = getWaitingList();
-  let prev_supply = null;
+  let prev = null;
   document.getElementById('tableBody').innerHTML = YEARS.map(y => {
-    const s    = getSupply(y);
-    const d    = getDemand(y);
-    const gap  = s - d;
-    const wlv  = wl[y];
-    const added = prev_supply !== null ? s - prev_supply : 0;
-    prev_supply = s;
+    const s   = getSupply(y), d = getDemand(y), gap = getGap(y);
+    const added = prev !== null ? s - prev : 0;
+    prev = s;
     const isPost = y > 2030;
-    const wlClass = wlv == null ? '' : wlv > 500 ? 'neg' : wlv > 200 ? '' : 'pos';
-    const gd   = GOV_DEMAND[y] ? fmt(GOV_DEMAND[y]) : '—';
-    return `<tr class="${isPost?'eftir áætlun':''}">
+    const gapClass = gap>0?'neg':'pos';
+    return `<tr class="${isPost?'eftir-aetlun':''}">
       <td><span class="yr-badge">${y}</span>${isPost?' <span style="font-size:0.68rem;color:#9aacbc">eftir áætlun</span>':''}</td>
       <td>${fmt(s)}</td>
       <td>${fmt(d)}</td>
-      <td class="${gap>=0?'pos':'neg'}">${fmtSign(gap)}</td>
-      <td>${gd}</td>
-      <td class="${wlClass}">${wlv!=null?fmt(wlv):'—'}</td>
+      <td class="${gapClass}" style="font-weight:700">${gap>0?fmt(gap):'—'}</td>
       <td>${fmt(annualAdmissions(s))}</td>
       <td style="color:#1a6eb5;font-weight:${added>0?'600':'400'}">${added>0?'+'+fmt(added):'—'}</td>
     </tr>`;
   }).join('');
 }
 
-function buildProjectTable() {
-  document.getElementById('projectBody').innerHTML = PROJECTS.map(p=>`<tr>
-    <td><span class="yr-badge">${p.yr}</span></td>
-    <td>${p.name}</td>
-    <td>${p.region}</td>
-    <td style="font-weight:600;color:${p.rooms>0?'#1a6eb5':'#9aacbc'}">${p.rooms>0?'+'+p.rooms:'TBD'}</td>
-  </tr>`).join('');
-}
-
 // ── RENDER ────────────────────────────────────────────────────────────────────
 function renderAll() {
+  _waitlist = null; // invalidate cache
   updateKPIs();
   buildMainChart();
   buildWaitChart();
-  buildStackChart();
+  buildWaitTimeChart();
   buildFlowChart();
   buildTable();
+  buildProjectTable();
 }
 
-// ── CONTROLS ─────────────────────────────────────────────────────────────────
-const sliders = [
-  ['rate67',      v => { rate67      = v/100;      return v+'%'; }],
-  ['rate80',      v => { rate80      = v/100;      return v+'%'; }],
-  ['stayMonths',  v => { stayMonths  = parseInt(v);return v+' mán.'; }],
-  ['targetWait',  v => { targetWait  = parseInt(v); return v+' dagar'; }],
-  ['currentWait', v => { currentWait = parseInt(v); return v+' dagar'; }],
-  ['pct90',       v => { pct90       = parseInt(v); return v+'%'; }],
-  ['waitInit',    v => { waitInit    = parseInt(v);return fmt(v); }],
-  ['postBuild',   v => { postBuild   = parseInt(v);return v+'/ár'; }],
-];
-sliders.forEach(([id, fn]) => {
-  document.getElementById(id).addEventListener('input', function() {
+// ── SLIDERS ───────────────────────────────────────────────────────────────────
+[
+  ['waitInit',   v => { waitInit   = parseInt(v);   return Math.round(v).toLocaleString('is-IS'); }],
+  ['rate6769',   v => { rate6769   = parseFloat(v); return v+'%'; }],
+  ['rate7079',   v => { rate7079   = parseFloat(v); return v+'%'; }],
+  ['rate8089',   v => { rate8089   = parseFloat(v); return v+'%'; }],
+  ['rate90p',    v => { rate90p    = parseFloat(v); return v+'%'; }],
+  ['stayMonths', v => { stayMonths = parseInt(v);   return v+' mán.'; }],
+  ['targetWait', v => { targetWait = parseInt(v);   return v+' dagar'; }],
+  ['postBuild',  v => { postBuild  = parseInt(v);   return v+'/ár'; }],
+].forEach(([id, fn]) => {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.addEventListener('input', function() {
     const display = fn(this.value);
-    document.getElementById('val'+id.charAt(0).toUpperCase()+id.slice(1)).textContent = display;
+    const valEl = document.getElementById('val'+id.charAt(0).toUpperCase()+id.slice(1));
+    if (valEl) valEl.textContent = display;
     renderAll();
   });
 });
 
-// ── INIT ─────────────────────────────────────────────────────────────────────
+// ── INIT ──────────────────────────────────────────────────────────────────────
 renderAll();
 buildPopChart();
-buildProjectTable();
 </script>
 </body>
 </html>
