@@ -112,7 +112,7 @@
 <body>
 
 <div class="header">
-  <h1>Hjúkrunarheimili - Markaðsgreining ÍF (FEB 26)</h1>
+  <h1>Hjúkrunarheimili - Markaðsgreining ÍF (Mars 26)</h1>
   <div class="header-sub">
     <span class="badge">Mannfjöldagögn: Hagstofa Íslands MAN09010 (miðgildisspá)</span>
     <span class="badge">Framkvæmdaáætlun: Félags- og húsnæðismálaráðuneytið, feb 2026</span>
@@ -129,10 +129,10 @@
   <!-- ── SECTION 1: MARKET SIZE ── -->
   <div class="section-label">Lykiltölur</div>
   <div class="kpi-grid">
-    <div class="kpi blue"><label>Rými í rekstri</label><div class="val">2,976</div><div class="sub">Sóltún viðmið 2025</div></div>
-    <div class="kpi red"><label>Heildaþörf í dag</label><div class="val" id="kpi-demand-now">–</div><div class="sub" id="kpi-demand-sub">Þörfuhlutfall × mannfjöldi 67+</div></div>
-    <div class="kpi orange"><label>Biðlisti</label><div class="val" id="kpi-waitlist">–</div><div class="sub">Staðfest þörf, án rýmis</div></div>
-    <div class="kpi green"><label>Rýmavöntun — strax</label><div class="val" id="kpi-beds-now">–</div><div class="sub" id="kpi-beds-sub">Til að uppfylla markmiðsbiðtíma</div></div>
+    <div class="kpi blue"><label>Rými í rekstri</label><div class="val">2,976</div><div class="sub">Rými árið 2025</div></div>
+    <div class="kpi red"><label>Heildaþörf 2026</label><div class="val" id="kpi-demand-now">–</div><div class="sub" id="kpi-demand-sub">Aldursgreind þörf 67+</div></div>
+    <div class="kpi orange"><label>Biðlisti</label><div class="val" id="kpi-waitlist">–</div><div class="sub">Reiknuð þörf</div></div>
+    <div class="kpi green"><label>Rýmavöntun</label><div class="val" id="kpi-beds-now">–</div><div class="sub" id="kpi-beds-sub">Til að uppfylla markmiðsbiðtíma</div></div>
     <div class="kpi teal"><label>Innritanir á ári</label><div class="val" id="kpi-annual-admit">–</div><div class="sub">Rými × veltuhlutfall</div></div>
     <div class="kpi purple"><label>Reiknaður biðtími — 2025</label><div class="val" id="kpi-wait-time">–</div><div class="sub" id="kpi-wait-time-sub">dagar (markmið: 90 d.)</div></div>
   </div>
@@ -232,7 +232,7 @@
       <tbody id="projectBody"></tbody>
     </table>
     <div style="margin-top:10px;font-size:0.78rem;color:#9aacbc;">
-      * Hanið/lokið = staðfest í nýjustu gögnum Félags- og húsnæðismálaráðuneytisins (feb 2026) ·
+      * Hafið/lokið = staðfest í nýjustu gögnum Félags- og húsnæðismálaráðuneytisins (feb 2026) ·
       Keilisbraut 90 merktur sem óstaðfestur í gögnum ráðuneytisins
     </div>
   </div>
@@ -614,7 +614,7 @@ function buildWaitTimeChart() {
   waitTimeChart = new Chart(ctx, {
     data:{labels:YEARS, datasets:[
       {type:'bar',  label:'Reiknaður biðtími (dagar)', data, backgroundColor:colors, borderWidth:0},
-      {type:'line', label:'Markmiðsbiðtími', data:target, borderColor:'#e67e22', borderDash:[5,4], borderWidth:2, pointRadius:0, fill:false},
+      {type:'line', label:'Markmið um biðtíma', data:target, borderColor:'#e67e22', borderDash:[5,4], borderWidth:2, pointRadius:0, fill:false},
     ]},
     options:{responsive:true,
       plugins:{legend:{position:'bottom',labels:{boxWidth:12,font:{size:11}}},
