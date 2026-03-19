@@ -827,11 +827,13 @@ function renderAll() {
 // ── INIT ──────────────────────────────────────────────────────────────────────
 renderAll();
 buildPopChart();
+</script>
 
 </div><!-- /container -->
 </div><!-- /tab-dashboard -->
 
 <!-- ANALYSIS TAB -->
+
 <div id="tab-analysis" class="tab-pane">
 <div class="analysis-wrap">
 
@@ -839,7 +841,7 @@ buildPopChart();
     <h2>Hvers vegna við teljum mat ríkisins vanrækja raunþörfina</h2>
     <p>Félags- og húsnæðismálaráðuneytið (FRN) og heilbrigðisráðuneytið (HRN) birtu í mars 2026 framkvæmdaáætlun um uppbyggingu hjúkrunarheimila til ársins 2030. Skýrslan lýsir metnaðarfullum markmiðum — eyða biðlistum að mestu fyrir 2029–2030. Hér útskýrum við hvers vegna við teljum þessa niðurstöðu vera of bjartsýna og hvað skiptir máli þegar gögn eru skoðuð nánar.</p>
     <div class="an-warning">
-      <p><strong>Lykilniðurstaða:</strong> Mat ríkisins á þörf hjúkrunarrýma er framboðsskorðað — það mælir hve margir <em>komast inn í kerfið</em> í dag, en ekki hve margir <em>þurfa á þjónustu að halda</em>. Þessa greinarmunur er grundvallaratriði sem hefur pólitískar afleiðingar.</p>
+      <p><strong>Lykilniðurstaða:</strong> Mat ríkisins á þörf hjúkrunarrýma er framboðsskorðað — það mælir hve margir <em>komast inn í kerfið</em> í dag, en ekki hve margir <em>þurfa á þjónustu að halda</em>. Þessi greinarmunur er grundvallaratriði sem hefur pólitískar afleiðingar.</p>
     </div>
   </div>
 
@@ -861,7 +863,7 @@ buildPopChart();
     <h2>2. Hvers vegna þessi aðferð er vandvirkur</h2>
     <h3>Vandinn: Framboðsskorðað mat</h3>
     <p>Þegar biðlisti er 725 manns og meðalbiðtími er 148 dagar, þá endurspeglar hlutfall þeirra sem eru á hjúkrunarheimili <strong>ekki raunþörf</strong> — það endurspeglar <strong>takmarkað framboð</strong>. Þeir sem hafa gefist upp á að fá rými, eða hafa aldrei sótt um vegna lágra vona, teljast ekki með.</p>
-    <p>Þetta er svipað og ef við mældum þörf fyrir skurðstofutíma með því að telja hve margar aðgerðir eru framkvæmdar á hverju ári — þegar biðlisti eru 18 mánuðir. Niðurstaðan myndi alltaf "sanna" að framboðið sé nóg.</p>
+    <p>Þetta er svipað og ef við mældum þörf fyrir skurðstofutíma með því að telja hve margar aðgerðir eru framkvæmdar á hverju ári — þegar biðlistar eru 18 mánuðir. Niðurstaðan myndi alltaf "sanna" að framboðið sé nóg.</p>
     <h3>Hringvísunarvandinn</h3>
     <p>Líkan ríkisins er í rauninni hringskilgreint:</p>
     <ul>
@@ -878,34 +880,31 @@ buildPopChart();
 
   <div class="an-section">
     <h2>3. Aðferðafræðin á þessu mælaborði (KPMG líkanið)</h2>
-    <p>Við notum <strong>klíníska hlutfallsaðferð</strong> sem KPMG hefur þróað og Sóltún/FRN nota í sínum greiningum. Hún byggir á:</p>
+    <p>Við notum <strong>klíníska hlutfallsaðferð</strong> sem KPMG hefur þróað. Hún byggir á:</p>
     <ul>
-      <li><strong>67–69 ára:</strong> 0,5% þurfa hjúkrunarheimili (stillanleg)</li>
+      <li><strong>67–69 ára:</strong> 0,5% þurfa hjúkrunarheimili</li>
       <li><strong>70–79 ára:</strong> 3,0% þurfa hjúkrunarheimili</li>
       <li><strong>80–89 ára:</strong> 13,5% þurfa hjúkrunarheimili</li>
       <li><strong>90+ ára:</strong> 40% þurfa hjúkrunarheimili</li>
     </ul>
-    <p>Þessum hlutföllum er síðan beitt á mannfjöldaspá Hagstofu Íslands (MAN09010, miðgildisspá 2026–2040). Niðurstaðan er aldursgreind þörf — <em>óháð núverandi framboði</em>.</p>
-    <p>Til viðbótar er þekktur biðlisti 2025 (sleðinn) bættur við. Þannig fæst heildaþörf sem <strong>endurspeglar bæði klíníska þörf og uppsafnaðar skuldbindingar</strong> gagnvart þeim sem þegar bíða.</p>
+    <p>Þessum hlutföllum er beitt á mannfjöldaspá Hagstofu Íslands (MAN09010). Niðurstaðan er aldursgreind þörf — <em>óháð núverandi framboði</em>. Til viðbótar er þekktur biðlisti 2025 bættur við. Þannig fæst heildaþörf sem endurspeglar bæði klíníska þörf og uppsafnaðar skuldbindingar.</p>
     <div class="an-callout">
-      <p><strong>Munurinn:</strong> KPMG líkanið gefur ~4.800–5.000 rými í þörf árið 2030. Ríkið segir ~4.508. Munurinn er 300–500 rými — eða að minnsta kosti 2–3 meðalstór hjúkrunarheimili sem vantar í áætlun ríkisins.</p>
+      <p><strong>Munurinn:</strong> KPMG líkanið gefur ~4.800–5.000 rými í þörf árið 2030. Ríkið segir ~4.508. Munurinn er 300–500 rými — að minnsta kosti 2–3 meðalstór hjúkrunarheimili sem vantar í áætlun ríkisins.</p>
     </div>
   </div>
 
   <div class="an-section">
     <h2>4. Samanburður á líkönum</h2>
     <table class="compare-table">
-      <thead>
-        <tr><th>Þáttur</th><th>Mat ríkisins (HRN)</th><th>KPMG líkanið (þetta mælaborð)</th></tr>
-      </thead>
+      <thead><tr><th>Þáttur</th><th>Mat ríkisins (HRN)</th><th>KPMG líkanið</th></tr></thead>
       <tbody>
         <tr><td><strong>Aðferð</strong></td><td>Biðtímadreifingarfall (75% mörk)</td><td>Klínískt hlutfall × aldurshóp</td></tr>
-        <tr><td><strong>Grunnlína</strong></td><td>Núverandi nýtingarhlutfall (~6% / ~15%)</td><td>Klínískar rannsóknir, óháðar framboði</td></tr>
+        <tr><td><strong>Grunnlína</strong></td><td>Núverandi nýtingarhlutfall (~6%/~15%)</td><td>Klínískar rannsóknir, óháðar framboði</td></tr>
         <tr><td><strong>Biðlisti</strong></td><td>Hluti af þörfinni (endogent)</td><td>Bættur við ofan á þörfina (exogent)</td></tr>
         <tr><td><strong>Dvalartími</strong></td><td>Fastur (núverandi 1,8–2,4 ár)</td><td>Stillanlegur sleði (6–36 mánuðir)</td></tr>
         <tr><td><strong>Þörf 2030</strong></td><td>~4.508 rými</td><td>~4.800–5.100 rými</td></tr>
         <tr><td><strong>Þörf 2040</strong></td><td>~5.860 rými (áætl.)</td><td>~6.500–7.500 rými</td></tr>
-        <tr><td><strong>Biðlisti 2030</strong></td><td>0 (markmið)</td><td>200–600 (líklegt)</td></tr>
+        <tr><td><strong>Biðlisti 2029–2030</strong></td><td>0 (markmið ríkisins)</td><td>200–600 (líklegt samkvæmt líkani)</td></tr>
         <tr><td><strong>Helsti galli</strong></td><td>Framboðsskorðað — hringvísun</td><td>Hlutföll geta breyst með tíma</td></tr>
       </tbody>
     </table>
@@ -916,20 +915,20 @@ buildPopChart();
     <h3>Vanmat á þörf hefur þrjár beinar afleiðingar:</h3>
     <ul>
       <li><strong>Of fáar framkvæmdir skipulagðar</strong> — ef ríkið trúir eigin tölum munu þeir ekki setja af stað nógu margar framkvæmdir eftir 2030 þegar 80+ hópurinn tvöfaldast</li>
-      <li><strong>Of lítið fjármagn tryggt</strong> — fjármálaáætlun byggir á vanmetin þörf, sem þýðir fjárþörf kemur á óvart síðar</li>
+      <li><strong>Of lítið fjármagn tryggt</strong> — fjármálaáætlun byggir á vanmetinni þörf, sem þýðir fjárþörf kemur á óvart síðar</li>
       <li><strong>Pólitísk gæsla slaknar</strong> — ef biðlistar "hverfa" á pappír 2029–2030 mun þrýstingur á uppbyggingu minnka — jafnvel þótt raunverulegar þarfir séu óuppfylltar</li>
     </ul>
     <h3>Dvalartíminn — vanræktur þáttur</h3>
-    <p>Skýrsla ríkisins sýnir að meðaldvalartími er <strong>1,8–2,6 ár</strong> eftir umdæmum (miðgildi 2024). Mat ríkisins gerir ráð fyrir að þetta breytist ekki. En ef dvalartími styttist — vegna aukinnar heimaþjónustu — þarf <em>fleiri</em> rými til að þjóna sama fjölda einstaklinga á ársgrundvelli. Þetta er þversagnarkennt en rétt: styttri dvöl = hraðari velting = fleiri þurfa innlögn = fleiri rými í notkun samtímis ef þörfin er hin sama.</p>
+    <p>Skýrsla ríkisins sýnir að meðaldvalartími er <strong>1,8–2,6 ár</strong> eftir umdæmum (miðgildi 2024). Mat ríkisins gerir ráð fyrir að þetta breytist ekki. En ef dvalartími styttist — vegna aukinnar heimaþjónustu — þarf <em>fleiri</em> rými til að þjóna sama fjölda einstaklinga á ársgrundvelli.</p>
     <div class="an-callout">
-      <p><strong>Prófaðu sjálfur:</strong> Farðu á Mælaborðið og breyttu "Meðaldvöl hvers íbúa" sleðanum. Sjáðu hvernig þörf og biðlisti þróast eftir mismunandi forsendum um dvalartíma.</p>
+      <p><strong>Prófaðu sjálfur:</strong> Farðu á Mælaborðið og breyttu "Meðaldvöl hvers íbúa" sleðanum. Sjáðu hvernig þörf og biðlisti þróast eftir mismunandi forsendum.</p>
     </div>
   </div>
 
   <div class="an-section">
     <h2>6. Niðurstaða</h2>
     <p>Framkvæmdaáætlun ríkisins fyrir 2026–2030 er mikilvægt skref í rétta átt. Uppbygging 1.355 nýrra rýma er metnaðarfull og nauðsynleg. <strong>En hún er líklega ófullnægjandi</strong> til að mæta raunþörfinni.</p>
-    <p>Vandinn liggur ekki í framkvæmdunum sjálfum heldur í <strong>þörfarlíkaninu</strong> sem er notað til að réttlæta að áætlunin sé nóg. Þegar líkanið mælir þörf út frá takmarkaðri nýtingu í stað klínískrar þarfar, þá mun það alltaf gefa of lágar tölur.</p>
+    <p>Vandinn liggur ekki í framkvæmdunum sjálfum heldur í <strong>þörfarlíkaninu</strong> sem er notað til að réttlæta að áætlunin sé nóg. Þegar líkanið mælir þörf út frá takmarkaðri nýtingu í stað klínískrar þarfar, mun það alltaf gefa of lágar tölur.</p>
     <p>80+ hópurinn tvöfaldast fram til 2040. Engar framkvæmdir eru fyrirhugaðar eftir 2030. Þessi samsetning — bjartsýnt þörfarlíkan + engin langtímaáætlun — er það sem okkur þykir mest áhyggjur af.</p>
     <div class="an-warning">
       <p><strong>Spurningin sem þarf að spyrja:</strong> Ef ríkið er að nota biðlistann sem mælikvarða á þörf — en biðlistinn er sjálfur takmarkaður af framboði — hvernig getur þörfin þá nokkurn tímann reynst vera meiri en framboðið? Svarið er: hún getur það ekki. Og það er nákvæmlega vandinn.</p>
@@ -945,10 +944,9 @@ function switchTab(name) {
   document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('tab-' + name).classList.add('active');
-  event.target.classList.add('active');
+  event.currentTarget.classList.add('active');
 }
 </script>
 
-</script>
 </body>
 </html>
