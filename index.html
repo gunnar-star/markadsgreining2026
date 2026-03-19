@@ -111,6 +111,39 @@ tr:hover td { background: #f7fafd; }
 .proj-row-inactive { opacity:0.35; }
 .proj-row-inactive td { text-decoration:line-through; color:#aaa; }
 .proj-row-inactive .adj-cell { pointer-events:none; }
+
+/* Tabs */
+.tab-nav { display:flex; background:#0f1f35; border-bottom:3px solid #1a3a5c; padding:0 36px; }
+.tab-btn { padding:13px 26px; color:rgba(255,255,255,0.55); font-size:0.82rem; font-weight:700;
+letter-spacing:0.06em; text-transform:uppercase; cursor:pointer; border:none; background:none;
+border-bottom:3px solid transparent; margin-bottom:-3px; transition:all 0.18s; }
+.tab-btn:hover { color:rgba(255,255,255,0.85); }
+.tab-btn.active { color:#fff; border-bottom-color:#4eb8ff; }
+.tab-pane { display:none; }
+.tab-pane.active { display:block; }
+
+/* Analysis tab */
+.analysis-wrap { max-width:860px; margin:0 auto; padding:32px 18px 60px; }
+.an-section { background:white; border-radius:10px; padding:28px 32px; margin-bottom:22px;
+box-shadow:0 1px 6px rgba(0,0,0,0.07); }
+.an-section h2 { font-size:1.15rem; font-weight:700; color:#0f1f35; margin-bottom:14px;
+padding-bottom:10px; border-bottom:2px solid #f0f4f8; }
+.an-section h3 { font-size:0.9rem; font-weight:700; color:#1a3a5c; margin:18px 0 8px; }
+.an-section p { font-size:0.87rem; color:#3a4f63; line-height:1.8; margin-bottom:10px; }
+.an-section ul { margin:6px 0 14px 18px; }
+.an-section li { font-size:0.87rem; color:#3a4f63; line-height:1.75; margin-bottom:4px; }
+.an-section strong { color:#0f1f35; }
+.an-callout { background:#fff8e1; border-left:4px solid #f9a825; border-radius:6px;
+padding:14px 18px; margin:16px 0; }
+.an-callout p { margin:0; color:#5d4037; font-size:0.87rem; line-height:1.7; }
+.an-warning { background:#fdecea; border-left:4px solid #c0392b; border-radius:6px;
+padding:14px 18px; margin:16px 0; }
+.an-warning p { margin:0; color:#7b1c1c; font-size:0.87rem; line-height:1.7; }
+.compare-table { width:100%; border-collapse:collapse; font-size:0.83rem; margin:14px 0; }
+.compare-table th { background:#0f1f35; color:white; padding:9px 14px; text-align:left; font-weight:600; }
+.compare-table td { padding:9px 14px; border-bottom:1px solid #f0f4f8; vertical-align:top; }
+.compare-table tr:last-child td { border-bottom:none; }
+.compare-table tr:nth-child(even) td { background:#f7fafd; }
 @media (max-width: 800px) { .chart-grid { grid-template-columns: 1fr; } }
 </style>
 
@@ -126,6 +159,14 @@ tr:hover td { background: #f7fafd; }
   </div>
 </div>
 
+<!-- TAB NAVIGATION -->
+
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab('dashboard')">📊 Mælaborð</button>
+  <button class="tab-btn" onclick="switchTab('analysis')">🔍 Greining — Aðferðafræði ríkisins</button>
+</div>
+
+<div id="tab-dashboard" class="tab-pane active">
 <div class="container">
 <div class="two-col">
 
@@ -170,7 +211,13 @@ tr:hover td { background: #f7fafd; }
   <!-- ── MAIN CHART ── -->
 
   <div class="chart-full">
-    <h2>Framboð vs. Þörf — 2025 til 2040</h2>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+    <h2 style="margin:0">Framboð vs. Þörf — 2025 til 2040</h2>
+    <label style="font-size:0.78rem;color:#8a9bb0;cursor:pointer;display:flex;align-items:center;gap:6px;">
+      <input type="checkbox" id="toggleHRN" checked onchange="showHRN=this.checked;buildMainChart();" style="accent-color:#e67e22;">
+      Sýna þörf skv. ríkinu (HRN 75%)
+    </label>
+  </div>
     <div class="chart-note">Blár = framkvæmdaáætlun ríkis (til 2030), síðan spá um ný rými eftir 2030. Rauður = Vöntun. Appelsínugult strikað = markmið ríkisins (til 2030). Skyggða svæðið sýnir fjölda í þörf fyrir rými</div>
     <canvas id="mainChart" height="75"></canvas>
   </div>
@@ -350,6 +397,28 @@ const POP_7079 = {2025:28110,2026:29223,2027:30272,2028:31277,2029:31945,2030:32
 const POP_8089 = {2025:11713,2026:12567,2027:13203,2028:13976,2029:14852,2030:15686,2031:16558,2032:17361,2033:18061,2034:18865,2035:19604,2036:20342,2037:21144,2038:21943,2039:22475,2040:23115};
 const POP_90P  = {2025:2497, 2026:2586, 2027:2650, 2028:2704, 2029:2734, 2030:2804, 2031:2900, 2032:3022, 2033:3221, 2034:3435, 2035:3666, 2036:3949, 2037:4203, 2038:4503, 2039:4829, 2040:5132};
 const BEDS_2025 = 2976;
+
+// HRN þörfartölur samkvæmt Taflu 9, Framkvæmdaáætlun mars 2026 (75% mörk dreifingar biðtíma)
+const HRN_DEMAND = {
+  2025: 3787, // 3062 + 725 biðlisti
+  2026: 3819,
+  2027: 3990,
+  2028: 4175,
+  2029: 4361,
+  2030: 4508,
+  2031: 4600, // extrapolated from trend
+  2032: 4700,
+  2033: 4810,
+  2034: 4930,
+  2035: 5060,
+  2036: 5200,
+  2037: 5350,
+  2038: 5510,
+  2039: 5680,
+  2040: 5860,
+};
+let showHRN = true;
+
 
 const PROJECTS = [
   {name:"Urðarhvarf",       region:"Höfuðborgarsvæðið", rooms:100, year:2026, type:"confirmed"},
@@ -758,7 +827,128 @@ function renderAll() {
 // ── INIT ──────────────────────────────────────────────────────────────────────
 renderAll();
 buildPopChart();
+
+</div><!-- /container -->
+</div><!-- /tab-dashboard -->
+
+<!-- ANALYSIS TAB -->
+<div id="tab-analysis" class="tab-pane">
+<div class="analysis-wrap">
+
+  <div class="an-section">
+    <h2>Hvers vegna við teljum mat ríkisins vanrækja raunþörfina</h2>
+    <p>Félags- og húsnæðismálaráðuneytið (FRN) og heilbrigðisráðuneytið (HRN) birtu í mars 2026 framkvæmdaáætlun um uppbyggingu hjúkrunarheimila til ársins 2030. Skýrslan lýsir metnaðarfullum markmiðum — eyða biðlistum að mestu fyrir 2029–2030. Hér útskýrum við hvers vegna við teljum þessa niðurstöðu vera of bjartsýna og hvað skiptir máli þegar gögn eru skoðuð nánar.</p>
+    <div class="an-warning">
+      <p><strong>Lykilniðurstaða:</strong> Mat ríkisins á þörf hjúkrunarrýma er framboðsskorðað — það mælir hve margir <em>komast inn í kerfið</em> í dag, en ekki hve margir <em>þurfa á þjónustu að halda</em>. Þessa greinarmunur er grundvallaratriði sem hefur pólitískar afleiðingar.</p>
+    </div>
+  </div>
+
+  <div class="an-section">
+    <h2>1. Hvernig reiknar ríkið þörfina?</h2>
+    <p>Heilbrigðisráðuneytið notar svokallað <strong>biðtímadreifingarfall</strong> til að meta þörf. Hugmyndin er einföld: hve mörg rými þarf til að 75% einstaklinga með samþykkt færni- og heilsumat fái rými <em>innan 90 daga</em>?</p>
+    <p>Til að gera þetta nota þeir <strong>núverandi nýtingarhlutfall</strong> sem grunnlínu:</p>
+    <ul>
+      <li>Um <strong>6%</strong> landsmanna 67 ára og eldri búa á hjúkrunarheimili í dag</li>
+      <li>Um <strong>15%</strong> einstaklinga 80 ára og eldri búa á hjúkrunarheimili í dag</li>
+    </ul>
+    <p>Þörfin 2030 er síðan reiknuð sem: <em>núverandi hlutfall × stærri aldurshópar samkvæmt mannfjöldaspá</em>.</p>
+    <div class="an-callout">
+      <p><strong>Í stuttu máli:</strong> Ríkið gengur út frá því að sama hlutfall aldraðra þurfi hjúkrunarheimili á hverjum tíma og gerist í dag — og þar liggur vandinn.</p>
+    </div>
+  </div>
+
+  <div class="an-section">
+    <h2>2. Hvers vegna þessi aðferð er vandvirkur</h2>
+    <h3>Vandinn: Framboðsskorðað mat</h3>
+    <p>Þegar biðlisti er 725 manns og meðalbiðtími er 148 dagar, þá endurspeglar hlutfall þeirra sem eru á hjúkrunarheimili <strong>ekki raunþörf</strong> — það endurspeglar <strong>takmarkað framboð</strong>. Þeir sem hafa gefist upp á að fá rými, eða hafa aldrei sótt um vegna lágra vona, teljast ekki með.</p>
+    <p>Þetta er svipað og ef við mældum þörf fyrir skurðstofutíma með því að telja hve margar aðgerðir eru framkvæmdar á hverju ári — þegar biðlisti eru 18 mánuðir. Niðurstaðan myndi alltaf "sanna" að framboðið sé nóg.</p>
+    <h3>Hringvísunarvandinn</h3>
+    <p>Líkan ríkisins er í rauninni hringskilgreint:</p>
+    <ul>
+      <li>Þörf er metin út frá biðlista</li>
+      <li>Biðlisti er takmarkaður af framboði</li>
+      <li>Framboð ákvarðar hve margir fá mat</li>
+      <li>Þeir sem fá mat ákvarða biðlista</li>
+      <li>→ Þörfin lítur alltaf út eins og hún passi við framboðið</li>
+    </ul>
+    <div class="an-warning">
+      <p><strong>Pólitísk áhrif:</strong> Þetta þýðir að ríkið getur "sýnt" að framkvæmdaáætlunin muni eyða biðlista — en aðeins vegna þess að líkanið þeirra notar biðlistann sem mælikvarða á þörf í stað þess að meta klíníska þörf óháð framboði.</p>
+    </div>
+  </div>
+
+  <div class="an-section">
+    <h2>3. Aðferðafræðin á þessu mælaborði (KPMG líkanið)</h2>
+    <p>Við notum <strong>klíníska hlutfallsaðferð</strong> sem KPMG hefur þróað og Sóltún/FRN nota í sínum greiningum. Hún byggir á:</p>
+    <ul>
+      <li><strong>67–69 ára:</strong> 0,5% þurfa hjúkrunarheimili (stillanleg)</li>
+      <li><strong>70–79 ára:</strong> 3,0% þurfa hjúkrunarheimili</li>
+      <li><strong>80–89 ára:</strong> 13,5% þurfa hjúkrunarheimili</li>
+      <li><strong>90+ ára:</strong> 40% þurfa hjúkrunarheimili</li>
+    </ul>
+    <p>Þessum hlutföllum er síðan beitt á mannfjöldaspá Hagstofu Íslands (MAN09010, miðgildisspá 2026–2040). Niðurstaðan er aldursgreind þörf — <em>óháð núverandi framboði</em>.</p>
+    <p>Til viðbótar er þekktur biðlisti 2025 (sleðinn) bættur við. Þannig fæst heildaþörf sem <strong>endurspeglar bæði klíníska þörf og uppsafnaðar skuldbindingar</strong> gagnvart þeim sem þegar bíða.</p>
+    <div class="an-callout">
+      <p><strong>Munurinn:</strong> KPMG líkanið gefur ~4.800–5.000 rými í þörf árið 2030. Ríkið segir ~4.508. Munurinn er 300–500 rými — eða að minnsta kosti 2–3 meðalstór hjúkrunarheimili sem vantar í áætlun ríkisins.</p>
+    </div>
+  </div>
+
+  <div class="an-section">
+    <h2>4. Samanburður á líkönum</h2>
+    <table class="compare-table">
+      <thead>
+        <tr><th>Þáttur</th><th>Mat ríkisins (HRN)</th><th>KPMG líkanið (þetta mælaborð)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Aðferð</strong></td><td>Biðtímadreifingarfall (75% mörk)</td><td>Klínískt hlutfall × aldurshóp</td></tr>
+        <tr><td><strong>Grunnlína</strong></td><td>Núverandi nýtingarhlutfall (~6% / ~15%)</td><td>Klínískar rannsóknir, óháðar framboði</td></tr>
+        <tr><td><strong>Biðlisti</strong></td><td>Hluti af þörfinni (endogent)</td><td>Bættur við ofan á þörfina (exogent)</td></tr>
+        <tr><td><strong>Dvalartími</strong></td><td>Fastur (núverandi 1,8–2,4 ár)</td><td>Stillanlegur sleði (6–36 mánuðir)</td></tr>
+        <tr><td><strong>Þörf 2030</strong></td><td>~4.508 rými</td><td>~4.800–5.100 rými</td></tr>
+        <tr><td><strong>Þörf 2040</strong></td><td>~5.860 rými (áætl.)</td><td>~6.500–7.500 rými</td></tr>
+        <tr><td><strong>Biðlisti 2030</strong></td><td>0 (markmið)</td><td>200–600 (líklegt)</td></tr>
+        <tr><td><strong>Helsti galli</strong></td><td>Framboðsskorðað — hringvísun</td><td>Hlutföll geta breyst með tíma</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="an-section">
+    <h2>5. Hvað þýðir þetta í reynd?</h2>
+    <h3>Vanmat á þörf hefur þrjár beinar afleiðingar:</h3>
+    <ul>
+      <li><strong>Of fáar framkvæmdir skipulagðar</strong> — ef ríkið trúir eigin tölum munu þeir ekki setja af stað nógu margar framkvæmdir eftir 2030 þegar 80+ hópurinn tvöfaldast</li>
+      <li><strong>Of lítið fjármagn tryggt</strong> — fjármálaáætlun byggir á vanmetin þörf, sem þýðir fjárþörf kemur á óvart síðar</li>
+      <li><strong>Pólitísk gæsla slaknar</strong> — ef biðlistar "hverfa" á pappír 2029–2030 mun þrýstingur á uppbyggingu minnka — jafnvel þótt raunverulegar þarfir séu óuppfylltar</li>
+    </ul>
+    <h3>Dvalartíminn — vanræktur þáttur</h3>
+    <p>Skýrsla ríkisins sýnir að meðaldvalartími er <strong>1,8–2,6 ár</strong> eftir umdæmum (miðgildi 2024). Mat ríkisins gerir ráð fyrir að þetta breytist ekki. En ef dvalartími styttist — vegna aukinnar heimaþjónustu — þarf <em>fleiri</em> rými til að þjóna sama fjölda einstaklinga á ársgrundvelli. Þetta er þversagnarkennt en rétt: styttri dvöl = hraðari velting = fleiri þurfa innlögn = fleiri rými í notkun samtímis ef þörfin er hin sama.</p>
+    <div class="an-callout">
+      <p><strong>Prófaðu sjálfur:</strong> Farðu á Mælaborðið og breyttu "Meðaldvöl hvers íbúa" sleðanum. Sjáðu hvernig þörf og biðlisti þróast eftir mismunandi forsendum um dvalartíma.</p>
+    </div>
+  </div>
+
+  <div class="an-section">
+    <h2>6. Niðurstaða</h2>
+    <p>Framkvæmdaáætlun ríkisins fyrir 2026–2030 er mikilvægt skref í rétta átt. Uppbygging 1.355 nýrra rýma er metnaðarfull og nauðsynleg. <strong>En hún er líklega ófullnægjandi</strong> til að mæta raunþörfinni.</p>
+    <p>Vandinn liggur ekki í framkvæmdunum sjálfum heldur í <strong>þörfarlíkaninu</strong> sem er notað til að réttlæta að áætlunin sé nóg. Þegar líkanið mælir þörf út frá takmarkaðri nýtingu í stað klínískrar þarfar, þá mun það alltaf gefa of lágar tölur.</p>
+    <p>80+ hópurinn tvöfaldast fram til 2040. Engar framkvæmdir eru fyrirhugaðar eftir 2030. Þessi samsetning — bjartsýnt þörfarlíkan + engin langtímaáætlun — er það sem okkur þykir mest áhyggjur af.</p>
+    <div class="an-warning">
+      <p><strong>Spurningin sem þarf að spyrja:</strong> Ef ríkið er að nota biðlistann sem mælikvarða á þörf — en biðlistinn er sjálfur takmarkaður af framboði — hvernig getur þörfin þá nokkurn tímann reynst vera meiri en framboðið? Svarið er: hún getur það ekki. Og það er nákvæmlega vandinn.</p>
+    </div>
+    <p style="font-size:0.8rem;color:#9aacbc;margin-top:20px;">Greining byggð á: Framkvæmdaáætlun FRN/HRN mars 2026 · Mannfjöldaspá Hagstofu Íslands MAN09010 · KPMG/Sóltún þörfarlíkan · Kjördæmavika FRN feb 2026</p>
+  </div>
+
+</div><!-- /analysis-wrap -->
+</div><!-- /tab-analysis -->
+
+<script>
+function switchTab(name) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
 </script>
 
+</script>
 </body>
 </html>
