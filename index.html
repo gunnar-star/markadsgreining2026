@@ -178,7 +178,7 @@ padding:14px 18px; margin:16px 0; }
 
   <div class="section-label">Lykiltölur</div>
   <div class="kpi-grid">
-    <div class="kpi blue"><label>Rými í rekstri</label><div class="val">2,976</div><div class="sub">Rými árið 2025</div></div>
+    <div class="kpi blue"><label>Rými í rekstri</label><div class="val">3,062</div><div class="sub">Nóvember 2025 (HRN)</div></div>
     <div class="kpi red"><label>Heildaþörf 2026</label><div class="val" id="kpi-demand-now">–</div><div class="sub" id="kpi-demand-sub">Aldursgreind þörf 67+</div></div>
     <div class="kpi orange"><label>Biðlisti</label><div class="val" id="kpi-waitlist">–</div><div class="sub">Reiknuð þörf</div></div>
     <div class="kpi green"><label>Rýmavöntun</label><div class="val" id="kpi-beds-now">–</div><div class="sub" id="kpi-beds-sub">Til að uppfylla markmiðsbiðtíma</div></div>
@@ -313,8 +313,8 @@ padding:14px 18px; margin:16px 0; }
     <div class="ctrl-col-title red">Þörfuhlutfall eftir aldurshóp</div>
     <div class="ctrl-row">
       <label>Biðlisti 2025</label>
-      <input type="range" id="waitInit" min="0" max="1200" step="50" value="650">
-      <div class="ctrl-val" id="valWaitInit">650</div>
+      <input type="range" id="waitInit" min="0" max="1200" step="25" value="725">
+      <div class="ctrl-val" id="valWaitInit">725</div>
     </div>
     <div class="ctrl-row">
       <label>67–69 ára</label>
@@ -376,7 +376,7 @@ padding:14px 18px; margin:16px 0; }
     <div class="flow-metrics">
       <div class="flow-m"><label>Meðaldvöl</label><div class="fval" id="fm-stay">–</div><div class="fsub">Mánuðir á rými</div></div>
       <div class="flow-m"><label>Veltuhlutfall</label><div class="fval" id="fm-turnover">–</div><div class="fsub">Innrit á ári per rými</div></div>
-      <div class="flow-m"><label>Innritanir á ári</label><div class="fval" id="fm-admissions">–</div><div class="fsub">Við 2.976 rými</div></div>
+      <div class="flow-m"><label>Innritanir á ári</label><div class="fval" id="fm-admissions">–</div><div class="fsub">Við 3.062 rými</div></div>
       <div class="flow-m"><label>Rýmavöntun 2030</label><div class="fval" id="fm-gap2030">–</div><div class="fsub">Þörf − framboð</div></div>
       <div class="flow-m"><label>Rýmavöntun 2040</label><div class="fval" id="fm-gap2040">–</div><div class="fsub">Þörf − framboð</div></div>
       <div class="flow-m"><label>Rýmavöntun í dag</label><div class="fval" id="fm-backlog">–</div><div class="fsub" id="fm-backlog-sub">Þörf − framboð 2025</div></div>
@@ -396,7 +396,7 @@ const POP_6769 = {2025:11322,2026:11526,2027:11647,2028:11604,2029:11588,2030:11
 const POP_7079 = {2025:28110,2026:29223,2027:30272,2028:31277,2029:31945,2030:32743,2031:33384,2032:33842,2033:34440,2034:34935,2035:35402,2036:35718,2037:36038,2038:36070,2039:36163,2040:36191};
 const POP_8089 = {2025:11713,2026:12567,2027:13203,2028:13976,2029:14852,2030:15686,2031:16558,2032:17361,2033:18061,2034:18865,2035:19604,2036:20342,2037:21144,2038:21943,2039:22475,2040:23115};
 const POP_90P  = {2025:2497, 2026:2586, 2027:2650, 2028:2704, 2029:2734, 2030:2804, 2031:2900, 2032:3022, 2033:3221, 2034:3435, 2035:3666, 2036:3949, 2037:4203, 2038:4503, 2039:4829, 2040:5132};
-const BEDS_2025 = 2976;
+const BEDS_2025 = 3062;
 
 // HRN þörfartölur samkvæmt Taflu 9, Framkvæmdaáætlun mars 2026 (75% mörk dreifingar biðtíma)
 const HRN_DEMAND = {
@@ -450,7 +450,7 @@ const PROJECTS = [
 // ── STATE ─────────────────────────────────────────────────────────────────────
 let adjustments = PROJECTS.map(() => 0);
 let activeProjects = PROJECTS.map(() => true);
-let waitInit   = 650;
+let waitInit   = 725;
 let rate6769   = 0.5;
 let rate7079   = 3.0;
 let rate8089   = 13.5;
