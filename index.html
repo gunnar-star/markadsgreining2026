@@ -436,7 +436,7 @@ const PROJECTS = [
   {name:"Akranes",          region:"Vesturland",           rooms: 60, year:2028, type:"planned"},
   {name:"Hraunvangur",      region:"Höfuðborgarsvæðið", rooms:125, year:2028, type:"planned"},
   {name:"Eir Grafarvogur",  region:"Höfuðborgarsvæðið", rooms: 60, year:2028, type:"planned"},
-  {name:"Vigdísarholt",     region:"Höfuðborgarsvæðið", rooms:108, year:2029, type:"ppp"},
+  {name:"Vigdísarholt",     region:"Höfuðborgarsvæðið", rooms:108, year:2029, type:"planned"},
   {name:"Eyri",             region:"Austurland",           rooms: 20, year:2029, type:"planned"},
   {name:"Vetrarmýri",       region:"Höfuðborgarsvæðið", rooms:100, year:2029, type:"planned"},
   {name:"Reykjavík (ógr.)", region:"Höfuðborgarsvæðið", rooms:100, year:2029, type:"planned"},
@@ -599,7 +599,7 @@ function buildProjectTable() {
   sortedYears.forEach(ey => {
     const group = effYearMap[ey];
     const supplyEOY = getSupply(ey);
-    const addedThisYear = group.reduce((s,p) => s+(p.rooms||0), 0);
+    const addedThisYear = group.filter(p=>activeProjects[p.i]).reduce((s,p) => s+(p.rooms||0), 0);
     html += `<tr class="proj-year-group">
       <td colspan="5"><strong>${ey}</strong> — Framboð í árslok: <strong>${fmt(supplyEOY)}</strong></td>
       <td colspan="2" style="text-align:right">Viðbót þetta ár: <strong>+${fmt(addedThisYear)}</strong></td>
