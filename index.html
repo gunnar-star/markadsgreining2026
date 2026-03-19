@@ -672,12 +672,17 @@ function buildMainChart() {
   const gap    = YEARS.map((y,i)=>Math.max(0,demand[i]-supply[i]));
   const ctx = document.getElementById('mainChart').getContext('2d');
   if (mainChart) mainChart.destroy();
-  mainChart = new Chart(ctx, {
-    data:{labels:YEARS, datasets:[
+  const hrnLine = YEARS.map(y => HRN_DEMAND[y] || null);
+  const mainDatasets = [
       {type:'bar',  label:'Rýmavöntun', data:gap, backgroundColor:'rgba(192,57,43,0.15)', borderColor:'rgba(192,57,43,0.3)', borderWidth:1},
       {type:'line', label:'Framboð (rými)', data:supply, borderColor:'#1a6eb5', backgroundColor:'rgba(26,110,181,0.06)', borderWidth:2.5, pointRadius:4, fill:false, tension:0.15},
-      {type:'line', label:'Þörf (4 aldurshópar + biðlisti)', data:demand, borderColor:'#c0392b', borderWidth:2.5, pointRadius:4, fill:false, tension:0.15},
-    ]},
+      {type:'line', label:'Þörf — KPMG líkan', data:demand, borderColor:'#c0392b', borderWidth:2.5, pointRadius:4, fill:false, tension:0.15},
+  ];
+  if (showHRN) mainDatasets.push(
+      {type:'line', label:'Þörf — mat ríkisins (HRN 75%)', data:hrnLine, borderColor:'#e67e22', borderWidth:2.5, borderDash:[6,4], pointRadius:3, pointBackgroundColor:'#e67e22', fill:false, tension:0.15}
+  );
+  mainChart = new Chart(ctx, {
+    data:{labels:YEARS, datasets:mainDatasets},
     options:{responsive:true, interaction:{mode:'index',intersect:false},
       plugins:{legend:{position:'bottom',labels:{boxWidth:13,font:{size:11}}},
         tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${c.raw!=null?fmt(c.raw):'—'}`}}},
@@ -919,7 +924,7 @@ buildPopChart();
       <li><strong>Pólitísk gæsla slaknar</strong> — ef biðlistar "hverfa" á pappír 2029–2030 mun þrýstingur á uppbyggingu minnka — jafnvel þótt raunverulegar þarfir séu óuppfylltar</li>
     </ul>
     <h3>Dvalartíminn — vanræktur þáttur</h3>
-    <p>Skýrsla ríkisins sýnir að meðaldvalartími er <strong>1,8–2,6 ár</strong> eftir umdæmum (miðgildi 2024). Mat ríkisins gerir ráð fyrir að þetta breytist ekki. En ef dvalartími styttist — vegna aukinnar heimaþjónustu — þarf <em>fleiri</em> rými til að þjóna sama fjölda einstaklinga á ársgrundvelli.</p>
+    <p>Skýrsla ríkisins sýnir að meðaldvalartími er <strong>1,8–2,6 ár</strong> eftir umdæmum (miðgildi 2024). Mat ríkisins gerir ráð fyrir að þetta breytist ekki. En ef dvalartími styttist — vegna aukinnar heimaþjónustu sem gerir fólki kleift að búa lengur heima — þarf <em>færri</em> rými samtímis þar sem rýmin losna hraðar og velting eykst. Þetta er jákvæð þróun, en hún krefst þess að heimaþjónusta sé í raun til staðar og nægileg.</p>
     <div class="an-callout">
       <p><strong>Prófaðu sjálfur:</strong> Farðu á Mælaborðið og breyttu "Meðaldvöl hvers íbúa" sleðanum. Sjáðu hvernig þörf og biðlisti þróast eftir mismunandi forsendum.</p>
     </div>
