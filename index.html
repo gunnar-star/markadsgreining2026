@@ -145,6 +145,36 @@ padding:14px 18px; margin:16px 0; }
 .compare-table tr:last-child td { border-bottom:none; }
 .compare-table tr:nth-child(even) td { background:#f7fafd; }
 @media (max-width: 800px) { .chart-grid { grid-template-columns: 1fr; } }
+
+/* Samkeppni tab */
+.comp-wrap { max-width:1080px; margin:0 auto; padding:32px 18px 60px; }
+.comp-wrap .an-section { max-width:none; }
+.tbl-scroll { overflow-x:auto; margin:14px 0; }
+.proj-table { width:100%; border-collapse:collapse; font-size:0.8rem; min-width:840px; }
+.proj-table th { background:#0f1f35; color:white; padding:8px 10px; text-align:left; font-weight:600; white-space:nowrap; }
+.proj-table td { padding:8px 10px; border-bottom:1px solid #f0f4f8; vertical-align:top; color:#3a4f63; line-height:1.5; }
+.proj-table tr:nth-child(even) td { background:#f7fafd; }
+.proj-table td.num { text-align:right; white-space:nowrap; }
+.sbadge { display:inline-block; padding:2px 9px; border-radius:12px; font-size:0.7rem; font-weight:700; white-space:nowrap; }
+.sbadge.rekstur { background:#e2f4e8; color:#1e6b3c; }
+.sbadge.samningur { background:#e1eefb; color:#155a9c; }
+.sbadge.skipulag { background:#fff3d6; color:#8a6100; }
+.sbadge.vilja { background:#fde8d7; color:#a04e0a; }
+.sbadge.hugmynd { background:#fdecea; color:#9c2b23; }
+.sbadge.haett { background:#ececec; color:#666; text-decoration:line-through; }
+.rdots { color:#1a6eb5; letter-spacing:2px; white-space:nowrap; font-size:0.78rem; }
+.rdots span.off { color:#d5dfe8; }
+.comp-kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(185px,1fr)); gap:12px; margin:18px 0 6px; }
+.seg-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:14px; margin:16px 0; }
+.seg-card { border:1px solid #e3eaf1; border-radius:10px; padding:16px 18px; background:#fbfdff; }
+.seg-card h4 { font-size:0.85rem; color:#0f1f35; margin-bottom:8px; }
+.seg-card p { font-size:0.8rem; color:#3a4f63; line-height:1.65; margin-bottom:6px; }
+.seg-card .seg-verdict { font-size:0.76rem; font-weight:700; padding-top:8px; border-top:1px dashed #d5dfe8; margin-top:8px; }
+.seg-card.open { border-color:#27ae60; background:#f4fbf6; }
+.comp-chart-box { background:white; border-radius:10px; padding:20px 22px; margin-bottom:22px; box-shadow:0 1px 6px rgba(0,0,0,0.07); }
+.comp-chart-box h3 { font-size:0.95rem; color:#0f1f35; margin-bottom:4px; }
+.comp-chart-box .sub { font-size:0.75rem; color:#8a9bb0; margin-bottom:12px; }
+.srcnote { font-size:0.72rem; color:#9aacbc; line-height:1.6; }
 </style>
 
 </head>
@@ -155,6 +185,7 @@ padding:14px 18px; margin:16px 0; }
   <div class="header-sub">
     <span class="badge">Mannfjöldagögn: Hagstofa Íslands MAN09010 (miðgildisspá)</span>
     <span class="badge">Framkvæmdaáætlun: Félags- og húsnæðismálaráðuneytið, feb 2026</span>
+    <span class="badge">Lífsgæðakjarnar: samkeppnisgreining, ágúst 2026</span>
     <span class="badge highlight">Trúnaðarmál — til innri nota</span>
   </div>
 </div>
@@ -164,6 +195,7 @@ padding:14px 18px; margin:16px 0; }
 <div class="tab-nav">
   <button class="tab-btn active" onclick="switchTab('dashboard')">📊 Mælaborð</button>
   <button class="tab-btn" onclick="switchTab('analysis')">🔍 Greining — Aðferðafræði ríkisins</button>
+  <button class="tab-btn" onclick="switchTab('samkeppni')">🏘️ Lífsgæðakjarnar — framboð &amp; samkeppni</button>
 </div>
 
 <div id="tab-dashboard" class="tab-pane active">
@@ -944,12 +976,234 @@ buildPopChart();
 </div><!-- /analysis-wrap -->
 </div><!-- /tab-analysis -->
 
+<!-- ══════════ TAB: LÍFSGÆÐAKJARNAR — FRAMBOÐ & SAMKEPPNI ══════════ -->
+<div id="tab-samkeppni" class="tab-pane">
+<div class="comp-wrap">
+
+  <div class="an-section">
+    <h2>Lífsgæðakjarnar á Íslandi — kortlagning framboðs og samkeppni</h2>
+    <p style="font-size:0.75rem;color:#8a9bb0;margin-bottom:14px;">Staða 25. ágúst 2026 · Byggt á fréttaleit, fundargerðum sveitarfélaga, Skipulagsgátt, vefjum framkvæmdaaðila og stefnuskjölum ríkisins · Mannfjöldatölur: Hagstofa Íslands (MAN02005, MAN09010 miðspá)</p>
+    <p>Fjölmargir aðilar — þróunarfélög, sjálfseignarstofnanir og sveitarfélög — hafa boðað „lífsgæðakjarna" undanfarin þrjú ár. Þessi greining kortleggur öll verkefnin sem fundust, metur hvar þau eru raunverulega stödd og svarar lykilspurningunni: <strong>er hætta á að markaðurinn mettist á næstu 3–10 árum ef öll áformin ganga eftir?</strong></p>
+    <div class="an-callout">
+      <p><strong>Lykilniðurstaða:</strong> Nei — mettun er ólíkleg. Yfirlýstu áformin eru samtals stór á pappír (~3.500+ íbúðir 60+ á höfuðborgarsvæðinu), en aðeins <strong>eitt verkefni er komið með frágenginn uppbyggingarsamning</strong> (Reitir við Nauthólsveg) og <strong>engin íbúð er í byggingu í neinum nýju kjarnanna</strong>. Reynslan sýnir 2–4 ár frá viljayfirlýsingu að skóflustungu. Raunhæft nýtt framboð til 2030 er á bilinu 400–600 íbúðir — á sama tíma og heimilum 75 ára og eldri á höfuðborgarsvæðinu fjölgar um ~2.000. Jafnvel þótt <em>allt</em> yfirlýst framboð skilaði sér á auglýstum tíma næmi það innan við helmingi af fjölgun 75+ heimila til 2040.</p>
+    </div>
+    <div class="comp-kpis">
+      <div class="kpi blue"><label>Verkefni kortlögð</label><div class="val">30+</div><div class="sub">kjarnar og áform á landinu öllu, þar af 21 á höfuðborgarsvæðinu</div></div>
+      <div class="kpi orange"><label>Yfirlýst pípa hbsv.</label><div class="val">~3.500</div><div class="sub">íbúðir 60+ í yfirlýstum áformum — mest á teikniborði</div></div>
+      <div class="kpi red"><label>Með frágenginn samning</label><div class="val">1</div><div class="sub">verkefni (Reitir/Nauthólsvegur, 150–200 íb.) — engin íbúð enn í byggingu í nýjum kjarna</div></div>
+      <div class="kpi green"><label>Raunhæft til 2030</label><div class="val">400–600</div><div class="sub">nýjar kjarna-íbúðir á hbsv. (mat ÍF, sjá forsendur neðar)</div></div>
+      <div class="kpi purple"><label>Fjölgun 75+ heimila</label><div class="val">+2.000</div><div class="sub">á hbsv. til 2030; +7.100 til 2040 (Hagstofa miðspá)</div></div>
+      <div class="kpi teal"><label>Framboð í okkar undirflokki</label><div class="val">0</div><div class="sub">enginn í pípunni býður búseturéttarvöru með fullu þjónustustigi</div></div>
+    </div>
+  </div>
+
+  <div class="an-section">
+    <h2>1. Hvað er „lífsgæðakjarni"? Hugtakið og sagan</h2>
+    <p><strong>Uppruni:</strong> Hugmyndafræðin er upprunnin hjá Sjómannadagsráði/Hrafnistu og hefur „þróast þar áratugum saman" (Sigurður Garðarsson, frkvstj. Sjómannadagsráðs, Mannlíf 2022): hjúkrunarheimili, leiguíbúðir eldra fólks og þjónustumiðstöð rekin saman á einum stað. Fyrsti kjarninn undir þessu heiti, <strong>Sléttan við Sléttuveg í Fossvogi, opnaði í febrúar 2020</strong>; Boðaþing í Kópavogi er eldri útfærsla sömu hugsunar.</p>
+    <p><strong>Stefnuhugtak, ekki vörumerki:</strong> Reykjavíkurborg tók orðið upp í Græna planinu (2020–2022) og skilgreindi það í skipulagsforsendum í desember 2024 sem <em>„þyrpingu húsnæðis … einkum ætlaða 60 ára og eldri í blönduðum kjarna"</em> með markmið gegn einangrun og einmanaleika. Í dag nota ríkið, að minnsta kosti sex sveitarfélög og á annan tug framkvæmdaaðila orðið — hver með sína útfærslu. Í Skipulagsgátt kemur orðið þó aðeins fyrir í 4–5 málum; flest verkefni sem uppfylla skilgreininguna efnislega nota önnur heiti (þjónustuíbúðir, öryggisíbúðir, íbúðir 60+).</p>
+    <h3>Kjarnaeinkennin fjögur</h3>
+    <ul>
+      <li><strong>Íbúðir fyrir eldra fólk</strong> (60+/65+/70+) — leiga, eign eða búseturéttur</li>
+      <li><strong>Sameiginlegur þjónustukjarni</strong> — matsala/veitingar, félagsstarf, oft heilsurækt eða heilsugæsla</li>
+      <li><strong>Hjúkrunarrými í eða við kjarnann</strong> — nær alltaf ríkisfjármögnuð (daggjöld/leiguleið)</li>
+      <li><strong>Rekstrarsamþætting</strong> — íbúinn getur elst innan kjarnans án þess að flytja úr hverfinu</li>
+    </ul>
+    <div class="an-callout">
+      <p><strong>Okkar afstaða — er vara ÍF „lífsgæðakjarni"?</strong> Í grunnskilgreiningunni já: íbúðir eldra fólks með innbyggðum þjónustukjarna og tengingu við hjúkrun. En varan er meðvitað aðgreind á þremur ásum sem enginn kjarni í pípunni þjónar: <strong>(1) búsetuformið</strong> er íbúðarréttur að hætti Markarinnar (innborgunarþrep + húsnæðisgjald) — pípan er nær öll leiga eða hrein eignarsala; <strong>(2) þjónustustigið</strong> er hótel- og veitingaþjónusta, heilsulind og umönnun á staðnum innifalin — kjarnarnir bjóða grunnþjónustu og neyðarhnapp; <strong>(3) markhópurinn</strong> er efsta lag eignastigans 75+, ekki breiður 60+ hópur. Réttara er því að lýsa vörunni sem <em>þjónustubúsetu í hæsta gæðaflokki innan lífsgæðakjarna-hugmyndafræðinnar</em> — hún keppir um athygli við kjarnana en um kaupendur við engan þeirra beint.</p>
+    </div>
+  </div>
+
+  <div class="an-section">
+    <h2>2. Verkefnaskráin — höfuðborgarsvæðið</h2>
+    <p>Öll verkefni sem fundust, flokkuð eftir raunverulegri stöðu í ferli. Raunhæfnismat (1–5) er mat ÍF á líkum þess að verkefnið skili sér í þeirri mynd og á þeim tíma sem boðað er — byggt á skipulagsstöðu, fjármögnun, ferilskrá aðilans og tafasögu.</p>
+
+    <h3>Í rekstri — starfandi kjarnar (viðmiðið sem nýju verkefnin elta)</h3>
+    <div class="tbl-scroll"><table class="proj-table">
+      <thead><tr><th>Kjarni</th><th>Aðilar</th><th>Íbúðir</th><th>Hjúkrunarrými</th><th>Búsetuform</th><th>Staða</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Sléttan</strong> — Sléttuvegur/Skógarvegur, Fossvogi</td><td>Sjómannadagsráð/Hrafnista/DAS íbúðir</td><td class="num">147</td><td class="num">99</td><td>Leiga</td><td><span class="sbadge rekstur">Í rekstri 2020–24</span></td></tr>
+        <tr><td><strong>Boðaþing</strong> — Vatnsenda, Kópavogi</td><td>Hrafnista + Kópavogsbær + ríkið</td><td class="num">95</td><td class="num">108</td><td>Leiga (DAS)</td><td><span class="sbadge rekstur">Stækkun opnuð 9/2025</span></td></tr>
+        <tr><td><strong>Mörkin</strong> — Suðurlandsbraut</td><td>Grund</td><td class="num">152</td><td class="num">113</td><td><strong>Íbúðarréttur 30/70</strong></td><td><span class="sbadge rekstur">Uppselt, biðlisti</span></td></tr>
+        <tr><td><strong>Eir-kjarnar</strong> — Grafarvogi, Spöng, Mosfellsbæ</td><td>Eir ses.</td><td class="num">199</td><td class="num">~190</td><td>Leiga (öryggisíbúðir)</td><td><span class="sbadge rekstur">Í rekstri</span></td></tr>
+        <tr><td><strong>Sóltúnsþorpið</strong> — Sóltúni 1–3</td><td>Öldungur hf./Íslensk fjárfesting</td><td class="num">44</td><td class="num">92→159</td><td><strong>Eign m/þjónustu</strong></td><td><span class="sbadge rekstur">Íbúðir seldar; +67 rými 2027</span></td></tr>
+        <tr><td><strong>Hraunvangur</strong> — Hafnarfirði</td><td>Hrafnista/DAS</td><td class="num">64</td><td class="num">~180</td><td>Leiga</td><td><span class="sbadge rekstur">Í rekstri</span></td></tr>
+        <tr><td><strong>Ísafold/Strikið</strong> — Sjálandi, Garðabæ</td><td>Hrafnista (rými); BYGG byggði íbúðir</td><td class="num">134</td><td class="num">60</td><td>Eign</td><td><span class="sbadge rekstur">Í rekstri</span></td></tr>
+        <tr><td><strong>Sunnuhlíð</strong> — Kópavogi</td><td>Vigdísarholt (íbúðir)</td><td class="num">109</td><td class="num">54</td><td>Leiga/eign</td><td><span class="sbadge rekstur">Eldri kjarni</span></td></tr>
+      </tbody>
+    </table></div>
+    <p class="srcnote">Auk þess eldri stofn án fulls þjónustukjarna: ~500 íbúðir FEB, ~64 íbúðir á Seltjarnarnesi, dreifðar þjónustuíbúðir sveitarfélaga. Samtals er starfandi kjarna- og þjónustuíbúðastofn höfuðborgarsvæðisins gróflega 1.500–1.900 íbúðir.</p>
+
+    <h3>Samningur frágenginn / framkvæmdir að hefjast (líkleg afhending 2028–2030)</h3>
+    <div class="tbl-scroll"><table class="proj-table">
+      <thead><tr><th>Verkefni</th><th>Aðilar</th><th>Íbúðir 60+</th><th>Hjúkrunarrými</th><th>Búsetuform</th><th>Tímalína</th><th>Raunhæfni</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Loftleiðareitur / Nauthólsvegur</strong> — Öskjuhlíð</td><td>Reitir; hjúkrunarrekstur Eir</td><td class="num">150–200</td><td class="num">87–90</td><td>Leiga</td><td>Uppbyggingarsamningur 12/2025; hjúkrunarheimili í framkvæmd (lok 11/2027); íbúðir í deiliskipulagsferli — fyrsta afhending vart fyrr en 2029</td><td><span class="rdots">●●●●<span class="off">●</span></span></td></tr>
+        <tr><td><strong>Hamrar-stækkun</strong> — Mosfellsbæ</td><td>Ríki + bær; rekstur óútboðinn (Eir nærtæk)</td><td class="num">—</td><td class="num">66</td><td>—</td><td>Samkomulag 7/2025; framkvæmdir frá 2026, í notkun 2028</td><td><span class="rdots">●●●●<span class="off">●</span></span></td></tr>
+        <tr><td><strong>Vetrarmýri</strong> — Garðabæ</td><td>Ríki + Garðabær (leiguleið)</td><td class="num">—</td><td class="num">allt að 100</td><td>—</td><td>Samkomulag 3/2026; opnun 2029. Enginn íbúðahluti staðfestur enn</td><td><span class="rdots">●●●●<span class="off">●</span></span></td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Skipulag í vinnslu / viljayfirlýsing (afhending fyrst 2029+, mikil óvissa)</h3>
+    <div class="tbl-scroll"><table class="proj-table">
+      <thead><tr><th>Verkefni</th><th>Aðilar</th><th>Íbúðir 60+</th><th>Hjúkrunarrými</th><th>Búsetuform</th><th>Staða &amp; tímalína</th><th>Raunhæfni</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Borgarhöfði / Eirhöfði 2</strong> — Ártúnshöfða</td><td>Klasi + Heimar + Grundarheimilin</td><td class="num">allt að 160</td><td class="num">100–110</td><td>Óráðið (ekki búseturéttur skv. fyrirliggjandi gögnum)</td><td>Viljayfirlýsing 9/2024; boðað „fyrstu íbúar 2027–28" en enn í hönnun 3/2026 og ríkissamningur um hjúkrun ófrágenginn — raunhæfara 2029–30. Fjársterkustu bakhjarlarnir í pípunni</td><td><span class="rdots">●●●<span class="off">●●</span></span></td></tr>
+        <tr><td><strong>DAS-áætlun 2040</strong> — Laugarás, Skógarbær, Hraunvangur</td><td>Sjómannadagsráð/Hrafnista/DAS</td><td class="num">348</td><td class="num">~270</td><td>Leiga</td><td>50–60 ma.kr. áætlun kynnt 5/2025; 15 ára sjóndeildarhringur, skipulags- og ríkisfjármögnunarferli á byrjunarstigi; deiliskipulag Hraunvangs þó samþykkt</td><td><span class="rdots">●●●<span class="off">●●</span></span></td></tr>
+        <tr><td><strong>Vatnshlíð</strong> — við Ásvallarbraut, Hafnarfirði</td><td>Vigdísarholt + Hafnarfjarðarbær</td><td class="num">óskilgr. (þjónustu-, hjúkrunar- og 55+ íbúðir)</td><td class="num">108</td><td>Óráðið</td><td>Deiliskipulagslýsing auglýst 5–6/2026 (Skipulagsgátt 702/2026); lóð byggingarhæf 2027 skv. áætlun</td><td><span class="rdots">●●●<span class="off">●●</span></span></td></tr>
+        <tr><td><strong>Norður-Mjódd</strong></td><td>Klasi</td><td class="num">hluti af 448–550</td><td class="num">valkvætt</td><td>Óráðið</td><td>Skipulagstillaga 4/2025; 60+-hlutinn er heimild í skipulagi, ekki skuldbinding</td><td><span class="rdots">●●●<span class="off">●●</span></span></td></tr>
+        <tr><td><strong>Köllunarklettur</strong> — Laugarnesi</td><td>Þingvangur + Flóki Invest</td><td class="num">„allt að 1.500" (heild)</td><td class="num">já, óskilgr.</td><td>Óráðið</td><td>Viljayfirlýsing 5/2024; engin merki um deiliskipulag síðan; iðnaðar-/hafnarsvæði sem krefst umfangsmikilla skipulagsbreytinga. Talan er skipulagsheimildarkrafa, ekki afhendingarloforð</td><td><span class="rdots">●●<span class="off">●●●</span></span></td></tr>
+        <tr><td><strong>Skógarhlíð 16</strong> — við Öskjuhlíð</td><td>Reir þróun</td><td class="num">~70</td><td class="num">—</td><td>Óráðið</td><td>Jákvæð umsögn skipulagsfulltrúa 2/2024; frumstig</td><td><span class="rdots">●●<span class="off">●●●</span></span></td></tr>
+        <tr><td><strong>Leirtjörn, Gufunes, Ártúnshöfði</strong> (lóðaúthlutanir 2022)</td><td>Samtök aldraðra + Leigufélag aldraðra (+Félagsbústaðir 20%)</td><td class="num">~300</td><td class="num">—</td><td>Kostnaðarverð/leiga</td><td>Boðuð afhending 2024–27; verklok óstaðfest — ódýrari endi markaðarins, ekki bein samkeppni við lúxusvöru</td><td><span class="rdots">●●●<span class="off">●●</span></span></td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Hugmyndastig / hætt við</h3>
+    <div class="tbl-scroll"><table class="proj-table">
+      <thead><tr><th>Verkefni</th><th>Aðilar</th><th>Umfang</th><th>Staða</th><th>Raunhæfni</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Gunnarshólmi</strong> — austan Hólmsheiðar, Kópavogi</td><td>Aflvaki þróunarfélag („Lífsvaki")</td><td>~5.000 íbúðir 60+, allt að 1.200 hjúkrunarrými</td><td><span class="sbadge hugmynd">Hugmynd</span> Utan vaxtarmarka svæðisskipulags og á vatnsverndarsvæði; allt skipulagsferlið óunnið; veruleg pólitísk andstaða; upphafleg tímalína (1. áfangi á 2–3 árum frá 2024) þegar sprungin</td><td><span class="rdots">●<span class="off">●●●●</span></span></td></tr>
+        <tr><td><strong>Ártúnshöfði</strong> — Stórhöfða 9</td><td>Þorpið vistfélag</td><td>1.000–1.200 íbúðir</td><td><span class="sbadge haett">Hætt við</span> Seldi byggingarréttinn 2024 með ~2 ma.kr. hagnaði án þess að byggja — víti til varnaðar um vægi viljayfirlýsinga</td><td>—</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="an-section">
+    <h2>3. Verkefnaskráin — landið utan höfuðborgarsvæðisins</h2>
+    <p>Utan höfuðborgarsvæðisins er hugtakið sjaldgæft og verkefnin ýmist smá eða á frumstigi. Það sem sker sig úr:</p>
+    <div class="tbl-scroll"><table class="proj-table">
+      <thead><tr><th>Verkefni</th><th>Aðilar</th><th>Umfang</th><th>Staða</th><th>Raunhæfni</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Aðaltorg</strong> — Reykjanesbæ</td><td>Aðaltorg ehf. (Ingvar Eyfjörð)</td><td>450 íbúðir (þar af 138 öryggis-/þjónustuíb.) + 88 hjúkrunarrými í ~100.000 m² hverfi</td><td><span class="sbadge skipulag">Skipulag/áfangar</span> Reitur í þróun síðan 2016; verslunarhluti í byggingu 2025; ekkert afhendingarár íbúða; hjúkrunarsamningur við ríkið ófrágenginn. 450 íbúðir er mjög stórt fyrir ~24þ íbúa bæ</td><td><span class="rdots">●●●<span class="off">●●</span></span></td></tr>
+        <tr><td><strong>Nesvellir</strong> — Reykjanesbæ</td><td>Hrafnista + bærinn</td><td>Leiguíbúðir + þjónustumiðstöð + 60→120 rými</td><td><span class="sbadge rekstur">Í rekstri</span> 80 ný rými opnuð 1/2026</td><td><span class="rdots">●●●●●</span></td></tr>
+        <tr><td><strong>Ás/Grundarreitur</strong> — Hveragerði</td><td>Grund-samstæðan + bærinn</td><td>Ný hjúkrunarálma (skóflustunga 5/2025) + heimild fyrir allt að 80 íbúðir</td><td><span class="sbadge skipulag">Framkv. + skipulag</span> Deiliskipulag íbúðahlutans mætti ~30 athugasemdum nágranna</td><td><span class="rdots">●●●<span class="off">●●</span></span></td></tr>
+        <tr><td><strong>Hagahverfi &amp; Þursaholt</strong> — Akureyri</td><td>Akureyrarbær (enginn framkvæmdaaðili valinn)</td><td>Frátekið kjarnasvæði; Þursaholt: skipulag heimilar hjúkrun + íbúðir 60+ eftir að 100 íbúða Búfesti/EBAK-verkefni féll 2023</td><td><span class="sbadge hugmynd">Hugmynd/skipulag klárt</span> Skipulagið bíður fjársterks aðila — eini landsbyggðarmarkaðurinn ásamt Suðurnesjum sem ber stóran kjarna</td><td><span class="rdots">●●<span class="off">●●●</span></span></td></tr>
+        <tr><td><strong>Nestún</strong> — Hvammstanga</td><td>Húnaþing vestra</td><td>~4,8 ha kjarnasvæði við heilbrigðisstofnun</td><td><span class="sbadge skipulag">Dsk. í auglýsingu</span> (frestur 18.9.2026); örmarkaður, hæg uppbygging</td><td><span class="rdots">●●<span class="off">●●●</span></span></td></tr>
+        <tr><td><strong>Smærri kjarnaverkefni</strong> — Borgarnes, Vestmannaeyjar, Egilsstaðir, Selfoss (Grænamörk), Akranes (Dalbraut)</td><td>Staðbundin félög/sveitarfélög</td><td>7–31 íbúð hvert, oft klesst við starfandi hjúkrunarheimili</td><td><span class="sbadge samningur">Í byggingu/lokið</span> „Míní-kjarna"-módelið: raunhæft en örsmátt í heildarframboði</td><td><span class="rdots">●●●●<span class="off">●</span></span></td></tr>
+      </tbody>
+    </table></div>
+    <p class="srcnote">Hrein hjúkrunarheimilisverkefni án íbúðahluta (Húsavík 60 rými 2027, Akranes 60 rými 2028–29, Höfn vígt 8/2026 o.fl.) eru utan þessarar skrár — sjá Mælaborðið fyrir hjúkrunarrýmahliðina.</p>
+  </div>
+
+  <div class="an-section">
+    <h2>4. Framboð vs. eftirspurn — mettunarprófið</h2>
+    <p>Mettunarspurningin snýst um hlutfall: hversu hratt vex framboð kjarna-íbúða samanborið við fjölgun heimila 75 ára og eldri? Höfuðborgarsvæðið heldur stöðugt ~63% af 75+ hópnum (Hagstofa MAN02005). Miðspá Hagstofunnar gefur:</p>
+    <ul>
+      <li><strong>75+ á höfuðborgarsvæðinu:</strong> ~17.500 (2026) → ~20.700 (2030) → ~25.800 (2036) → ~28.500 (2040)</li>
+      <li><strong>Umreiknað í heimili</strong> (1,55 einstakl./heimili): ~11.300 (2026) → +2.000 til 2030 → +5.400 til 2036 → +7.100 til 2040</li>
+    </ul>
+    <div class="comp-chart-box">
+      <h3>Uppsöfnuð fjölgun 75+ heimila vs. uppsafnað nýtt kjarna-íbúðaframboð (hbsv., frá 2026)</h3>
+      <div class="sub">Tvær framboðssviðsmyndir: „Allt yfirlýst gengur eftir" (öll verkefni á auglýstum tíma) og „Raunhæft mat ÍF" (vegið með raunhæfnismati og sögulegum töfum). Mat ÍF — forsendur í kafla 5.</div>
+      <canvas id="compChart" height="120"></canvas>
+    </div>
+    <div class="an-callout">
+      <p><strong>Lesning:</strong> Bilið milli eftirspurnarlínunnar og framboðslínanna <em>breikkar</em> allan tímann. Yfirlýsta sviðsmyndin — sem gerir ráð fyrir að Borgarhöfði, DAS-áætlunin, Köllunarklettur og allt hitt skili sér á auglýstum tíma — nær samt aðeins um helmingi af fjölgun 75+ heimila til 2040. Til að <em>metta</em> markaðinn þyrfti framboðið að vaxa hraðar en eftirspurnin og éta jafnframt upp uppsafnaða vöntun (biðlisti Markarinnar ~5 ár, biðlistar DAS og Eirar á öllum stöðum). Ekkert í gögnunum bendir til þess.</p>
+    </div>
+  </div>
+
+  <div class="an-section">
+    <h2>5. Tímalínur og raunhæfni — hvað segir ferilskrá markaðarins?</h2>
+    <h3>Sögulega mynstrið</h3>
+    <ul>
+      <li><strong>Viljayfirlýsing → skóflustunga: 2–4 ár</strong> þegar allt gengur vel. „Stórsókn" Reykjavíkurborgar (viljayfirlýsingar um allt að 2.600 íbúðir, maí 2024) hefur þremur árum eftir upphaflega kallið skilað <em>engri íbúð í byggingu</em>; aðeins eitt teymanna fjögurra (Reitir) er komið með uppbyggingarsamning og eitt (Þorpið) er hætt.</li>
+      <li><strong>Hjúkrunarhlutarnir skila sér — íbúðahlutarnir dragast.</strong> Ríkisfjármögnuð rými á leiguleið hafa afhendingartakt (Boðaþing 2025, Nesvellir 2026, Sóltún 2027, Nauthólsvegur 2027, Mosfellsbær 2028, Vetrarmýri 2029). Íbúðahlutar sömu kjarna eiga sér hvorki fjármögnunarfarveg né skuldbindandi tímalínur.</li>
+      <li><strong>Viljayfirlýsing er ekki skuldbinding.</strong> Þorpið vistfélag skrifaði undir í maí 2024 og seldi lóðirnar sama ár með milljarða hagnaði. Aðaltorgsreiturinn hefur verið „í þróun" síðan 2016. Gunnarshólmi átti að hefja fyrsta áfanga innan 2–3 ára frá 2024 og er enn á lýsingarstigi svæðisskipulagsbreytinga.</li>
+      <li><strong>Ríkissamningurinn um hjúkrunarrýmin er flöskuháls einkakjarnanna.</strong> Borgarhöfði, Aðaltorg og Vatnshlíð byggja viðskiptalíkan kjarnans á hjúkrunarhluta sem ríkið hefur ekki samið um. Framkvæmdaáætlunin 2026–2030 er þegar full­ráðstöfuð að mestu.</li>
+    </ul>
+    <h3>Forsendur raunhæfa matsins (kafli 4)</h3>
+    <p>Vegið framboð = yfirlýstar íbúðir × líkur eftir stöðu: samningur frágenginn 80%, deiliskipulag í vinnslu 50%, viljayfirlýsing 30%, hugmyndastig 10% — að viðbættri 1–2 ára seinkun á yfirlýstar tímalínur (söguleg miðgildistöf). Það gefur ~450–500 íbúðir til 2030 og ~2.500 til 2040 á höfuðborgarsvæðinu. Næmni: jafnvel tvöföldun þessara líkinda breytir ekki niðurstöðunni um að framboð haldi ekki í við eftirspurn.</p>
+  </div>
+
+  <div class="an-section">
+    <h2>6. Samkeppnisgreining eftir búsetuformum — hvar er autt?</h2>
+    <p>Mettunarhættan er ekki jöfn yfir markaðinn. Rétt greining krefst skiptingar eftir búsetuformi og þjónustustigi:</p>
+    <div class="seg-grid">
+      <div class="seg-card">
+        <h4>Leiguíbúðir í kjarna</h4>
+        <p>Ráðandi form: DAS íbúðir (~350 nú + 348 í pípu), Eir (199), Reitir/Nauthólsvegur (150–200). Óhagnaðardrifin leiga með biðlistum eða gæðaleiga fasteignafélaga.</p>
+        <p class="seg-verdict" style="color:#a04e0a;">Hér verður þéttast setið 2029–2032 — en biðlistar í dag benda til að eftirspurn beri viðbótina.</p>
+      </div>
+      <div class="seg-card">
+        <h4>Eignaríbúðir með þjónustutengingu</h4>
+        <p>Sóltúnsþorpið (44 íb., seldar), BYGG-vörur (Strikið 134), Borgarhöfði líklega að hluta. Sala án áframhaldandi stjórnar á úthlutun; þjónusta keypt til viðbótar.</p>
+        <p class="seg-verdict" style="color:#a04e0a;">Virk samkeppni en dreifð; enginn með fullt þjónustustig innifalið.</p>
+      </div>
+      <div class="seg-card open">
+        <h4>Búseturéttur/íbúðarréttur — efri endi</h4>
+        <p>Eina varan á markaðnum er Mörkin (152 íb., 30/70-líkan): <strong>uppseld með ~5 ára biðlista og engin stækkun boðuð</strong>. Búmenn/Búseti starfa á kostnaðarverðsenda. Eir hvarf úr forminu eftir 2012–14.</p>
+        <p class="seg-verdict" style="color:#1e6b3c;">Pípan inniheldur NÚLL nýjar íbúðir í þessu formi. Þetta er bilið sem vara ÍF fyllir — og biðlisti Markarinnar er beinasta sönnunin um ómætta eftirspurn.</p>
+      </div>
+    </div>
+    <h3>Hverja þarf að vakta næstu 24 mánuði?</h3>
+    <ul>
+      <li><strong>Borgarhöfði (Klasi/Heimar/Grund)</strong> — næst okkar vöru að umfangi; ef þeir velja íbúðarréttarform með háu þjónustustigi verða þeir beinn keppinautur. Fjársterkustu bakhjarlarnir og Grund kann 30/70-líkanið. Vaktað: búsetuform og verðlagning þegar sala hefst.</li>
+      <li><strong>Reitir/Nauthólsvegur</strong> — sterkasta staðsetningin (Öskjuhlíð/Nauthólsvík) og eina verkefnið með frágenginn samning; leiguform dregur þó úr skörun við eignatengda vöru fyrir efnameiri hópinn.</li>
+      <li><strong>Sóltúnsþorpið</strong> — sannaði að premium-eignarvara selst; fylgjast með hvort Íslensk fjárfesting boði framhald út fyrir reitinn.</li>
+      <li><strong>Mörkin/Grund</strong> — ef Grund boðar stækkun Markarinnar breytist samkeppnisstaðan í okkar formi mest; engin merki um það í dag.</li>
+      <li><strong>Kaldalón</strong> — engin öldrunarpípa í dag en fjárhagsgetan til; stefnuyfirlýsing um samfélagsinnviði og eign við hlið Köllunarklettsreits gera félagið að mögulegum leigusala-þátttakanda.</li>
+    </ul>
+  </div>
+
+  <div class="an-section">
+    <h2>7. Niðurstaða fyrir fjárfestasamtalið</h2>
+    <p>Spurningin sem fjárfestir spyr er: <em>„Verður enn eftirspurn þegar húsið er tilbúið eftir 2–4 ár — eða verða þá tíu svipuð verkefni um allan bæ?"</em> Gögnin svara skýrt:</p>
+    <ul>
+      <li><strong>Raunhæft nýtt framboð til 2030 er 400–600 íbúðir</strong> á höfuðborgarsvæðinu — nær allt leiguíbúðir — á móti ~2.000 nýjum 75+ heimilum og uppsöfnuðum biðlistum í öllum starfandi kjörnum.</li>
+      <li><strong>Yfirlýsingarnar stóru eru ekki framboð.</strong> Af ~3.500 íbúða pappírspípu er eitt verkefni komið með samning. Sögulegi takturinn (2–4 ár frá yfirlýsingu að skóflustungu, íbúðahlutar dragast umfram hjúkrunarhluta) þýðir að meginþungi hennar lendir eftir 2031 — ef hann skilar sér.</li>
+      <li><strong>Í okkar undirflokki er framboðið núll.</strong> Enginn aðili í pípunni býður íbúðarrétt með fullu þjónustustigi fyrir efnameiri 75+ hópinn. Eina sambærilega varan (Mörkin) er uppseld með margra ára biðlista og stækkar ekki.</li>
+      <li><strong>Fjölgun eftirspurnarhópsins er framhlaðin umfram framboðið:</strong> 80+ hópurinn — sá sem knýr flutning í þjónustubúsetu — nær tvöfaldast til 2040. Jafnvel full afhending allrar pípunnar héldi ekki í við þá fjölgun.</li>
+      <li><strong>Áhættan sem vert er að nefna heiðarlega:</strong> staðbundin leigumettun 2029–2032 ef DAS, Reitir og Borgarhöfði lenda samtímis (snertir okkur takmarkað), og að Borgarhöfði velji íbúðarréttarform (vöktun skilgreind). Fyrsti hreyfandi í auðum undirflokki heldur samt forskoti á verðlagningu, lóðavali og rekstrarsamstarfi.</li>
+    </ul>
+    <div class="an-warning">
+      <p><strong>Ein setning fyrir kynninguna:</strong> Markaðurinn er ekki að mettast — hann er ekki einu sinni að hefja gang: eftirspurnarhópurinn vex þrisvar til fjórum sinnum hraðar en raunhæft framboð, og í því búsetuformi sem við bjóðum hefur ekki verið byggð ný íbúð síðan 2018 þrátt fyrir margra ára biðlista.</p>
+    </div>
+  </div>
+
+  <div class="an-section">
+    <h2>8. Aðferð, heimildir og fyrirvarar</h2>
+    <p><strong>Aðferð:</strong> Kerfisbundin leit (ágúst 2026) í fréttamiðlum (mbl.is, visir.is, vb.is, ruv.is, DV og héraðsmiðlum), fundargerðum og kynningargögnum sveitarfélaga (m.a. öldungaráðs Reykjavíkur), Skipulagsgátt, vefjum framkvæmda- og rekstraraðila, og stefnuskjölum ríkisins. Hvert verkefni er stöðumetið eftir frumheimildum þar sem þær fundust.</p>
+    <p><strong>Lykilheimildir:</strong> Framkvæmdaáætlun hjúkrunarrýma 2026–2030 (stjornarradid.is 16.3.2026) · Skipulagsforsendur lífsgæðakjarna Reykjavíkurborgar (des. 2024) · „Stórsókn í húsnæðismálum eldra fólks" (reykjavik.is 22.5.2024) · Uppbyggingaráætlun Sjómannadagsráðs (uppbygging.sjomannadagsrad.is; mbl 22.5.2025) · Uppbyggingarsamningur Nauthólsvegar (borgarstjórn 18.12.2025) · Skipulagsgátt mál 558/2026, 702/2026, 918/2026, 872/2024, 1316/2024 · Hagstofa Íslands MAN02005 og MAN09010 (miðspá, sótt um API 25.8.2026) · Vefir og tilkynningar Klasa, Reita, Heima, Grundar, Eirar, DAS íbúða, Sóltúns, Kaldalóns, Aðaltorgs o.fl.</p>
+    <p><strong>Fyrirvarar:</strong> (1) mbl.is og vb.is takmarka vefaðgang; efni þaðan styðst við leitarútdrætti og hliðarheimildir. (2) Ársreikningar lykilfélaga eru ekki opnir á vefnum; fjárhagslýsingar byggja á fréttum. (3) Íbúðatölur „allt að"-verkefna eru skipulagsheimildir, ekki afhendingarloforð. (4) Óstaðfest atriði eru merkt í texta (m.a. þjónustuíbúðahluti Bjarkarholts í Mosfellsbæ og hvaða hjúkrunarheimili viljayfirlýsing ríkisins við Hafnarfjörð á við). (5) Raunhæfnismat og framboðssviðsmyndir eru mat ÍF, ekki staðreyndir — forsendur eru birtar í kafla 5 svo lesandi geti hafnað þeim og reiknað sitt eigið mat.</p>
+    <p class="srcnote">Samantekt unnin fyrir ÍF í ágúst 2026. Uppfærist þegar staða lykilverkefna breytist (næsta eðlilega vakt: úthlutun ríkissamnings um hjúkrunarrými Borgarhöfða; söluupphaf Nauthólsvegar; skipulagsframvinda Köllunarkletts).</p>
+  </div>
+
+</div><!-- /comp-wrap -->
+</div><!-- /tab-samkeppni -->
+
 <script>
 function switchTab(name) {
   document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('tab-' + name).classList.add('active');
   event.currentTarget.classList.add('active');
+  if (name === 'samkeppni' && !window._compChartDone) { window._compChartDone = true; initCompChart(); }
+}
+
+function initCompChart() {
+  const yrs = [2026,2027,2028,2029,2030,2031,2032,2033,2034,2035,2036,2037,2038,2039,2040];
+  // Fjölgun 75+ heimila hbsv frá 2026: Hagstofa MAN09010 miðspá × 62,8% hbsv-hlutdeild ÷ 1,55 einstakl./heimili
+  const demandHH = [0,484,967,1513,2046,2608,3195,3802,4306,4864,5352,5762,6213,6666,7093];
+  // Uppsafnað nýtt kjarna-íbúðaframboð hbsv — sviðsmyndir ÍF (sjá kafla 5)
+  const supplyStated = [0,50,300,700,1050,1350,1700,2050,2350,2650,2900,3050,3200,3300,3400];
+  const supplyReal   = [0,0,80,250,450,650,900,1100,1350,1550,1750,1950,2150,2350,2500];
+  new Chart(document.getElementById('compChart'), {
+    type: 'line',
+    data: { labels: yrs, datasets: [
+      { label: 'Fjölgun 75+ heimila frá 2026 (hbsv.)', data: demandHH, borderColor: '#7b2d8b', backgroundColor: 'rgba(123,45,139,0.08)', fill: true, tension: 0.3, borderWidth: 2.5, pointRadius: 2 },
+      { label: 'Framboð: allt yfirlýst gengur eftir', data: supplyStated, borderColor: '#e67e22', borderDash: [6,4], tension: 0.3, borderWidth: 2, pointRadius: 2, fill: false },
+      { label: 'Framboð: raunhæft mat ÍF', data: supplyReal, borderColor: '#1a6eb5', tension: 0.3, borderWidth: 2.5, pointRadius: 2, fill: false }
+    ]},
+    options: {
+      responsive: true,
+      interaction: { mode: 'index', intersect: false },
+      plugins: { legend: { position: 'bottom', labels: { boxWidth: 14, font: { size: 11 } } },
+        tooltip: { callbacks: { label: c => c.dataset.label + ': ' + c.parsed.y.toLocaleString('is-IS') } } },
+      scales: {
+        y: { title: { display: true, text: 'Uppsafnað frá 2026 (heimili / íbúðir)', font: { size: 11 } }, ticks: { font: { size: 10 } } },
+        x: { ticks: { font: { size: 10 } } }
+      }
+    }
+  });
 }
 </script>
 
